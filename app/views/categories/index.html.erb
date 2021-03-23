@@ -1,0 +1,8 @@
+ <div class='pure-u-1 center'> 
+  <% @categories.each do |category| %>
+    <div class='background-white corner-rounded fit-content center padding-1 margin-vertical-1'>
+      <%= link_to category.name, category_path(category), class: 'center pure-button' %>
+      <p><%= category.description %></p>
+    </div>
+  <% end %>
+</div>
