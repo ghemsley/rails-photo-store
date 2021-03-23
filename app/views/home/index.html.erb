@@ -1,0 +1,13 @@
+<%= javascript_pack_tag 'categorySlider' %>
+<%= stylesheet_pack_tag 'categorySlider' %>
+<div class='column pure-u-1'>
+  <div class='pure-u-1-2 fit-content background-white padding-1 center center-children margin-vertical-1 shadow'>
+    <h1 class='margin-0 horizontal-padding-1 uppercase'>Prints</h1>
+    <p class='margin-0 horizontal-padding-1 subheading'>Printed photos by Graham Hemsley</p>
+  </div>
+  <% @categories.each do |category| %>
+    <div class='pure-u-1 margin-bottom-2'>
+      <%= react_component('CategorySlider', lazy: 'progressive', description: false, autoplay: true, arrows: true, dots: true, infinite: true, speed: 350, slides_to_show: 3, slides_to_scroll: 1, json: category.slider_props_json) %>
+    </div>
+  <% end %>
+</div>
