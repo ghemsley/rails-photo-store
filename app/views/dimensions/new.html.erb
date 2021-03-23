@@ -1,0 +1,35 @@
+<div class='pure-u-1 center'>
+  <h1>New dimension for product <%= @product_id %></h1>
+  <div class='form-container background-white'>
+    <%= form_with model: @dimension, url: category_product_dimensions_path(@category_id, @product_id), class: 'pure-form pure-form-stacked' do |f| %>
+      <fieldset>
+        <legend>Distance measurements</legend>
+        <%= f.label :length, 'Length' %>
+        <%= f.number_field :length, min: 0.00, step: 0.01, placeholder: 'Length' %>
+        <%= f.label :width, 'Width' %>
+        <%= f.number_field :width, min: 0.00, step: 0.01, placeholder: 'Width'  %>
+        <%= f.label :height, 'Height' %>
+        <%= f.number_field :height, min: 0.00, step: 0.01, placeholder: 'Height' %>
+        <%= f.label :distance_unit, 'Distance unit' %>
+        <%= f.text_field :distance_unit, placeholder: 'Distance unit'  %>
+      </fieldset>
+      <fieldset>
+        <legend>Weight measurements</legend>
+        <%= f.label  :weight, 'Weight' %>
+        <%= f.number_field :weight, min: 0.00, step: 0.01, placeholder: 'Weight'  %>
+        <%= f.label  :weight_unit, 'Weight unit' %>
+        <%= f.text_field :weight_unit, placeholder: 'Weight unit'  %>
+      </fieldset>
+      <%= f.fields_for :price_modifier, PriceModifier.new do |price_modifier_form| %>
+        <fieldset>
+          <legend>Price modifier for these dimensions</legend>
+          <%= price_modifier_form.label :number, 'Number' %>
+          <%= price_modifier_form.number_field :number, min: 0.00, step: 0.01, placeholder: 'Number' %>
+          <%= price_modifier_form.label :unit, 'Unit' %>
+          <%= price_modifier_form.text_field :unit, placeholder: 'Unit' %>
+        </fieldset>
+      <% end %>
+      <%= f.submit 'Create dimension' %>
+    <% end %>
+  </div>
+</div>
