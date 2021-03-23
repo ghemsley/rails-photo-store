@@ -1,0 +1,25 @@
+{
+  "name": "rails-photo-store",
+  "private": true,
+  "dependencies": {
+    "@babel/preset-react": "^7.12.13",
+    "@rails/actioncable": "^6.0.0",
+    "@rails/activestorage": "^6.0.0",
+    "@rails/ujs": "^6.0.0",
+    "@rails/webpacker": "5.2.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-awesome-lightbox": "^1.8.0",
+    "react-dom": "^17.0.1",
+    "react-hot-loader": "4",
+    "react-slick": "^0.28.1",
+    "slick-carousel": "^1.8.1",
+    "turbolinks": "^5.2.0",
+    "webpacker-react": "^0.3.2"
+  },
+  "version": "0.1.0",
+  "devDependencies": {
+    "webpack-dev-server": "^3.11.2"
+  }
+}
