@@ -1,0 +1,5 @@
+<div class='pure-u-1 center'>
+  <% @users.each do |user| %>
+    <%= link_to user.username, user_path(user) %>
+  <% end %>
+</div>
