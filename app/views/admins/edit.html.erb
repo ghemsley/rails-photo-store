@@ -1,0 +1,16 @@
+<div class='pure-u-1 center'>
+  <h1>Edit account info</h1>
+  <div class='form-container background-white'>
+    <%= form_with model: @admin, url: admin_path(@admin), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
+      <%= f.label :username, 'Username' %>
+      <%= f.text_field :username %>
+      <%= f.label :email, 'Email' %>
+      <%= f.text_field :email %>
+      <%= f.label  :new_password, 'New password' %>
+      <%= f.password_field :new_password %>
+      <%= f.label  :password, 'Password' %>
+      <%= f.password_field :password %>
+      <%= f.submit %>
+    <% end %>
+  </div>
+</div>
