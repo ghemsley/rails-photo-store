@@ -1,0 +1,12 @@
+<div class='pure-u-1 center'>
+  <h1>Admin sign in</h1>
+  <div class='form-container background-white'>
+    <%= form_with url: admin_signin_path, method: :post, class: 'pure-form pure-form-stacked' do |f| %>
+      <%= f.label :'admin[username]', 'Username' %>
+      <%= f.text_field :'admin[username]' %>
+      <%= f.label  :'admin[password]', 'Password' %>
+      <%= f.password_field :'admin[password]' %>
+      <%= f.submit 'Sign in' %>
+    <% end %>
+  </div>
+</div>
