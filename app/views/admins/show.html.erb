@@ -1,0 +1,8 @@
+<div class='pure-u-1 center'>
+  <h1><%= @admin.username %></h1>
+  <p><%= @admin.email %></p>
+  <div class='column'>
+    <%= link_to 'Edit admin account', edit_admin_path(@admin), class: 'pure-button margin-vertical-1' %>
+    <%= link_to 'New category', new_category_path, class: 'pure-button margin-vertical-1' %>
+  </div>
+</div>
