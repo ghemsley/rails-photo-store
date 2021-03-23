@@ -1,0 +1,16 @@
+<div class='pure-u-1 center'>
+  <h1>Sign up</h1>
+  <div class='form-container background-white'>
+    <%= form_with model: @user, class: 'pure-form pure-form-stacked' do |f| %>
+      <%= f.label :username, 'Username' %>
+      <%= f.text_field :username %>
+      <%= f.label :email, 'Email' %>
+      <%= f.text_field :email %>
+      <%= f.label  :password, 'Password' %>
+      <%= f.password_field :password %>
+      <%= f.label  :password_confirmation, 'Password confirmation' %>
+      <%= f.password_field :password_confirmation %>
+      <%= f.submit 'Sign up' %>
+    <% end %>
+  </div>
+</div>
