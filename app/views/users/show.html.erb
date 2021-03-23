@@ -1,0 +1,9 @@
+<div class='pure-u-1 center'>
+  <div class='column'>
+      <h1><%= @user.username %></h1>
+      <p class='lowercase'><%= @user.email %><p>
+      <% if signed_in? || admin_signed_in? %>
+        <%= link_to 'Edit my account', edit_user_path(@user), class: 'pure-button' %>
+      <% end %>
+  </div>
+</div>
