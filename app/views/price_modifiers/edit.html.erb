@@ -1,0 +1,22 @@
+<div class='pure-u-1 center'>
+  <h1>Edit price modifier <%= @price_modifier.id %> for dimension <%= @dimension_id %> of product <%= @product_id %></h1>
+  <div class='form-container background-white'>
+    <%= form_with model: @price_modifier, url: category_product_dimension_price_modifier_path(@category_id, @product_id, @dimension_id, @price_modifier), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
+      <fieldset>
+        <legend>Price modifier</legend>
+        <%= f.label :number, 'Number' %>
+        <%= f.number_field :number, min: 0.00, step: 0.01, placeholder: 'Number' %>
+        <%= f.label :unit, 'Unit' %>
+        <%= f.text_field :unit, placeholder: 'Unit' %>
+      </fieldset>
+      <%= f.submit 'Update price modifier' %>
+    <% end %>
+    </div>
+  <div class='edit-links'>
+    <%= link_to "Go to edit form for product #{@product_id}", edit_category_product_path(@category_id, @product_id) %>
+    <%= link_to "Go to edit form for dimension #{@dimension_id} of product #{@product_id}", edit_category_product_dimension_path(@category_id, @product_id, @dimension_id) %>
+    <% @price_modifier.dimension.product.dimensions.each do |dimension| %>
+      <%= dimension.price_modifier.id != @price_modifier.id ? (link_to "Go to edit form for price modifier of dimension #{dimension.id} of product #{@product_id}", edit_category_product_dimension_price_modifier_path(@category_id, @product_id, dimension, dimension.price_modifier)) : nil %>
+    <% end %>
+  </div>
+</div>
