@@ -1,0 +1,13 @@
+<div class='pure-u-1 center'>
+  <h1>Edit category</h1>
+  <div class='form-container background-white'>
+    <%= form_with model: @category, url: category_path(@category), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
+      <%= f.label :name, 'Name' %>
+      <%= f.text_field :name %>
+      <%= f.label :description, 'Description' %>
+      <%= f.text_field :description %>
+      <%= f.submit 'Update category' %>
+    <% end %>
+    <%= button_to 'Destroy this category', category_path(@category), method: 'delete' %>
+  </div>
+</div>
