@@ -1,0 +1,10 @@
+<%= javascript_pack_tag 'productCard' %>
+<%= stylesheet_pack_tag 'productCard' %>
+<div class='pure-u-sm-1 pure-u-lg-1-2 center'>
+  <%= react_component('ProductCard', full_size: true, show_description: true, name: @product.name, id: @product.id, description: @product.description, price: @product.price, price_unit: @product.price_unit, url: category_product_url(@product.category, @product), image: url_for(@product.image), thumbnail: url_for(@product.image.variant(resize_to_limit: [640, 640]).processed), thumbnail_medium: url_for(@product.image.variant(resize_to_limit: [1080, 1080]).processed), dimensions_json: @product.dimensions_json, lightbox: true, class_name: 'corner-rounded padding-1 margin-1 background-white' ) %>
+  <% if admin_signed_in? %>
+    <div class='center padding-1 margin-vertical-1'>
+      <%= link_to 'Edit product', edit_category_product_path(@category_id, @product), class: 'pure-button center' %>
+    </div>
+  <% end %>
+</div>
