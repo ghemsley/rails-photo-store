@@ -3,7 +3,11 @@
 <div class='pure-u-1 center'>
   <div class='pure-u-1-3 fit-content background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded'>
     <h1 class='margin-0 horizontal-padding-1 uppercase'>Search results</h1>
-    <p class='margin-0 horizontal-padding-1 subheading'>Products matching the search '<%= @query %>'</p>
+    <% if @query == '' || @products.empty? %>
+      <p class='margin-0 horizontal-padding-1 subheading'>Your search returned no results</p>
+    <% else %>
+      <p class='margin-0 horizontal-padding-1 subheading'>Products matching the search '<%= @query %>'</p>
+    <% end %>
   </div>
   <div class='display-flex'>
     <% @products.each do |product| %>
