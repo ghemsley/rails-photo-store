@@ -1,7 +1,12 @@
 class SearchesController < ApplicationController
   def search
-    @query = search_params(:query)
-    @products = Product.name_or_description_contains(@query)
+    if !(params[:query].nil? || params[:query] == '')
+      @query = search_params(:query)
+      @products = Product.name_or_description_contains(@query)
+    else
+      @query = ''
+      @products = []
+    end
   end
 
   def search_params(*args)
