@@ -2154,3 +2154,21 @@ element {
 .search-container {
   height: min-content;
 }
+
+.button-unstyle {
+  border: none;
+  border-radius: 2px;
+  background-color: inherit;
+  margin: 0px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+button, a {
+  &:focus {
+    outline-color: rgb(70, 112, 128);
+    outline-width: 1px;
+    outline-offset: 0px;
+  }
+}
