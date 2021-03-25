@@ -1,8 +1,8 @@
 <%= javascript_pack_tag 'categorySlider' %>
 <%= stylesheet_pack_tag 'categorySlider' %>
-<div class='pure-u-1-2 background-white padding-1 center center-children fit-content margin-vertical-1 shadow'>
+<div class='pure-u-1-2 background-white padding-1 center center-children fit-content margin-vertical-1 shadow corner-rounded'>
   <h1 class='margin-0 horizontal-padding-1 uppercase'><%= @category.name %></h1>
-  <p class='margin-0 padding-1'><%= @category.description %></p>
+  <p class='margin-0 horizontal-padding-1 subheading'><%= @category.description %></p>
 </div>
 <div class='pure-u-1'>
   <%= react_component('CategorySlider', lazy: 'progressive', description: false, autoplay: true, arrows: true, dots: true, infinite: false, speed: 350, slides_to_show: 3, slides_to_scroll: 1, json: @category.slider_props_json) %>

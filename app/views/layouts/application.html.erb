@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RailsPhotoShop</title>
+    <title>RailsPhotoStore</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -33,21 +33,16 @@
           </li>
         </ul>
         <ul class='pure-menu-list margin-auto padding-0'>
-          <% if signed_in? || admin_signed_in? %>
+          <% if admin_signed_in? && @admin %>
             <li class='pure-menu-item'>
-              <%= link_to 'Sign out', admin_signed_in? ? admin_signout_path : signout_path, class: 'pure-menu-link' %>
-            </li>
-          <% else %>
-            <li class='pure-menu-item'>
-              <%= link_to 'Sign in', signin_form_path, class: 'pure-menu-link' %>
+              <%= link_to 'Sign out', admin_signout_path, class: 'pure-menu-link pure-button' %>
             </li>
             <li class='pure-menu-item'>
-              <%= link_to 'Sign up', new_user_path, class: 'pure-menu-link' %>
+              <%= link_to 'Admin', admin_path(@admin), class: 'pure-menu-link pure-button' %>
             </li>
-          <% end %>
-          <% if admin_signed_in? %>
             <li class='pure-menu-item'>
               <%= link_to 'Users', users_path, class: 'pure-menu-link' %>
+            </li>
             </li>
           <% end %>
           <% Category.all.each do |category| %>
@@ -76,6 +71,9 @@
               </svg>
               <span class='snipcart-items-count'>
             </button>
+          </li>
+          <li class='pure-menu-item'>
+            <button class="snipcart-customer-signin pure-menu-link button-unstyle">My account</button>
           </li>
         </ul>
       </div>

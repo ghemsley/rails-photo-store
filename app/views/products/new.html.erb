@@ -7,7 +7,9 @@
         <%= f.label :name, 'Name' %>
         <%= f.text_field :name, placeholder: 'Name'  %>
         <%= f.label :description, 'Description' %>
-        <%= f.text_field :description, placeholder: 'Description'  %>
+        <%= f.text_area :description, cols: 43, rows: 5, placeholder: 'Description'  %>
+        <%= f.label :tags, 'Tags' %>
+        <%= f.text_area :tags, cols: 43, rows: 5, placeholder: 'Space-separated list of tags'  %>
         <%= f.label :price, 'Price' %>
         <%= f.number_field :price, min: 0.00, step: 0.01, placeholder: 'Price' %>
         <%= f.label :price_unit, 'Price unit' %>
