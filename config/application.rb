@@ -1,6 +1,8 @@
-require_relative "boot"
+require_relative 'boot'
 
-require "rails/all"
+require 'rails/all'
+
+require 'securerandom'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -17,9 +19,7 @@ module RailsPhotoStore
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore
-    Rails.application.routes.default_url_options[:host] = 'localhost:5000'
+    # config.eager_load_paths << Rails.root.join("extras")    
+    Rails.application.routes.default_url_options[:host] = 'localhost:5000' if Rails.env == 'development'
   end
 end
