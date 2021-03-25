@@ -1,6 +1,6 @@
 class PriceModifiersController < ApplicationController
   def edit
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
     @category_id = params[:category_id]
     @product_id = params[:product_id]
     @dimension_id = params[:dimension_id]
