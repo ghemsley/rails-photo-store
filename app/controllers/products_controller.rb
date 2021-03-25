@@ -8,13 +8,12 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @admin = get_admin_if_signed_in
     @category_id = params[:category_id]
     @product = Product.find(params[:id])
   end
 
   def new
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
     @category_id = params[:category_id]
     @product = Product.new
   end
@@ -30,7 +29,7 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
     @category_id = params[:category_id]
     @product = Product.find(params[:id])
   end
@@ -80,7 +79,7 @@ class ProductsController < ApplicationController
   end
 
   def create_product(product)
-    if product.update(product_params(:name, :description, :price, :price_unit, :image, :category_id,
+    if product.update(product_params(:name, :description, :tags, :price, :price_unit, :image, :category_id,
                                      dimensions_attributes: [:length, :width, :height, :weight, :distance_unit, :weight_unit,
                                                              { price_modifier_attributes: %i[number unit] }]))
       flash[:notice] = "Created product #{product.name} with ID #{product.id},
@@ -94,7 +93,7 @@ class ProductsController < ApplicationController
   end
 
   def update_product(product)
-    if product.update(product_params(:name, :description, :price, :price_unit, :image, :category_id))
+    if product.update(product_params(:name, :description, :tags, :price, :price_unit, :image, :category_id))
       flash[:notice] = "Updated product #{product.name} with ID #{product.id}"
       true
     else
