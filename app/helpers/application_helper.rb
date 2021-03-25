@@ -20,18 +20,14 @@ module ApplicationHelper
     ENV['RAILS_ADMIN_SECRET']
   end
 
-  def current_user
-    User.find(session[:current_user_id]) if session[:current_user_id]
-  end
-
   def signed_in?
-    return true if session[:current_user_id] && User.find(session[:current_user_id])
+    return true if session[:current_user_id] && @user
 
     false
   end
 
   def admin_signed_in?
-    return true if session[:current_admin_id] && Admin.find(session[:current_admin_id])
+    return true if session[:current_admin_id] && @admin
 
     false
   end
