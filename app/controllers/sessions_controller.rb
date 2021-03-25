@@ -4,20 +4,17 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by_username(params[:user][:username])
-    if user&.authenticate(params[:user][:password])
+    user = User.find_or_create_by(email: params[:user][:email])
+    if user
       session[:current_user_id] = user.id
-      flash[:notice] = 'Signed in'
-      redirect_to user_path(user)
-    else
-      flash[:error] = 'Failed to sign in'
-      redirect_to signin_form_path
+      puts user
     end
   end
 
   def destroy
-    session.delete(:current_user_id)
-    redirect_to root_url
+    user = User.find_by_id(session[:current_user_id]) if session[:current_user_id]
+    session.delete(:current_user_id) if session[:current_user_id]
+    puts user if user
   end
 
   def admin_create
@@ -31,7 +28,14 @@ class SessionsController < ApplicationController
   end
 
   def admin_destroy
-    session.delete(:current_admin_id)
+    session.delete(:current_admin_id) if session[:current_admin_id]
+    flash[:notice] = 'Signed out'
     redirect_to root_url
+  end
+
+  private
+
+  def session_params(*args)
+    params.require(:user).permit(*args)
   end
 end
