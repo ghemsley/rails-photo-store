@@ -124,31 +124,30 @@ ActiveRecord::Schema.define(version: 2021_03_18_153442) do
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.text "description"
+    t.text "tags"
     t.decimal "price"
     t.string "price_unit"
     t.integer "category_id"
-    t.integer "quantity_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_id"], name: "index_products_on_category_id"
-    t.index ["quantity_id"], name: "index_products_on_quantity_id"
   end
 
   create_table "quantities", force: :cascade do |t|
-    t.integer "number"
-    t.integer "cart_id"
+    t.integer "product_id"
+    t.integer "user_id"
+    t.integer "amount"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["cart_id"], name: "index_quantities_on_cart_id"
+    t.index ["product_id"], name: "index_quantities_on_product_id"
+    t.index ["user_id"], name: "index_quantities_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
     t.string "email"
-    t.string "password_digest"
     t.string "first_name"
     t.string "last_name"
-    t.string "company_name"
+    t.string "uuid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
