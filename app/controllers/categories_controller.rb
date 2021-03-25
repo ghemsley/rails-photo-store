@@ -1,16 +1,14 @@
 class CategoriesController < ApplicationController
   def index
-    @admin = get_admin_if_signed_in
     @categories = Category.all
   end
 
   def show
-    @admin = get_admin_if_signed_in
     @category = Category.find(params[:id])
   end
 
   def new
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
     @category = Category.new
   end
 
@@ -20,7 +18,7 @@ class CategoriesController < ApplicationController
   end
 
   def edit
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
     @category = Category.find(params[:id])
   end
 
