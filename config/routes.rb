@@ -1,19 +1,21 @@
 Rails.application.routes.draw do
   resources :categories do
     resources :products do
-      resources :dimensions, only: %i[new create edit update destroy] do 
+      resources :dimensions, only: %i[new create edit update destroy] do
         resources :price_modifiers, only: %i[edit update]
       end
     end
   end
 
   resources :users
-  resources :users do
-    resources :carts
-    resources :orders
-  end
+  # resources :users do
+  #   resources :carts
+  #   resources :orders
+  # end
 
   resources :admins
+
+  resources :quantities, only: %i[index show create update destroy]
 
   get '/signin', to: 'sessions#new', as: :signin_form
   post '/signin', to: 'sessions#create', as: :signin
