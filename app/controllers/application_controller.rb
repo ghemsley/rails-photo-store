@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  before_action :get_admin_if_signed_in, only: %i[index show new edit]
+
   private
 
   def redirect_unless_signed_in
@@ -13,11 +15,8 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_unless_admin_signed_in
-    if session[:current_admin_id]
-      admin = Admin.find(session[:current_admin_id])
-      return admin if admin
-    end
-    
+    return @admin if session[:current_admin_id] && @admin
+
     flash[:error] = 'Unauthorized'
     redirect_to root_path
     nil
@@ -25,8 +24,8 @@ class ApplicationController < ActionController::Base
 
   def get_admin_if_signed_in
     if session[:current_admin_id]
-      admin = Admin.find(session[:current_admin_id])
-      return admin if admin
+      @admin = Admin.find(session[:current_admin_id])
+      return @admin if @admin
     end
     nil
   end
