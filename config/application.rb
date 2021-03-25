@@ -2,8 +2,6 @@ require_relative 'boot'
 
 require 'rails/all'
 
-require 'securerandom'
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -19,7 +17,11 @@ module RailsPhotoStore
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")    
-    Rails.application.routes.default_url_options[:host] = '45.56.76.170:5000' if Rails.env == 'development'
+    # config.eager_load_paths << Rails.root.join("extras")
+    Rails.application.routes.default_url_options[:host] = if Rails.env == 'development' && RUBY_PLATFORM.include?('darwin')
+                                                            'localhost:5000'
+                                                          else
+                                                            (Rails.env == 'development' ? '45.56.76.170:5000' : 'photos.grahamhemsley.com')
+                                                          end
   end
 end

@@ -1,4 +1,5 @@
 class Product < ApplicationRecord
+  # Relations
   has_many :dimensions, dependent: :destroy
   accepts_nested_attributes_for :dimensions
 
@@ -27,28 +28,33 @@ class Product < ApplicationRecord
                                                       message: '%{value} is not a valid unit, currently only USD is supported' }
   validates_associated :dimensions
 
-  scope :price_in_usd, -> { where(price_unit: 'usd').or(where(price_unit: 'USD')) }
-  scope :price_unit, ->(unit) { where(price_unit: unit) }
+  # Scopes
+  scope :price_unit_is, lambda { |unit|
+                          where(price_unit: unit).or(where(price_unit: unit.upcase)).or(where(price_unit: unit.downcase))
+                        }
   scope :price_over, ->(price) { where('price > ?', price) }
   scope :price_under, ->(price) { where('price < ?', price) }
   scope :length_over, ->(length) { joins(:dimensions).where('length > ?', length) }
   scope :length_under, ->(length) { joins(:dimensions).where('length < ?', length) }
   scope :width_over, ->(width) { joins(:dimensions).where('width > ?', width) }
   scope :width_under, ->(width) { joins(:dimensions).where('width < ?', width) }
-  scope :weight_unit, ->(unit) { joins(:dimensions).where('weight_unit = ?', unit) }
+  scope :weight_unit_is, lambda { |unit|
+                           where(weight_unit: unit)
+                             .or(where(weight_unit: unit.upcase))
+                             .or(where(weight_unit: unit.downcase))
+                         }
   scope :weight_over, ->(weight) { joins(:dimensions).where('weight > ?', weight) }
   scope :weight_under, ->(weight) { joins(:dimensions).where('weight < ?', weight) }
   scope :name_contains, ->(string) { where('name LIKE ?', "%#{string}%") }
   scope :description_contains, ->(string) { where('description LIKE ?', "%#{string}%") }
-  scope :name_or_description_contains, lambda { |string|
-                                         where('name LIKE ?', "%#{string}%").or(where('description LIKE ?', "%#{string}%"))
-                                       }
+  scope :tags_contains, ->(string) { where('tags LIKE ?', "%#{string}%") }
   scope :metadata_contains, lambda { |string|
-                              where('name LIKE ?', "%#{string}%")
-                                .or(where('description LIKE ?', "%#{string}%"))
-                                .or(where('tags LIKE ?', "%#{string}%"))
+                              name_contains(string)
+                                .or(description_contains(string))
+                                .or(tags_contains(string))
                             }
 
+  # Instance methods
   def tags_to_a
     tags.downcase.strip.split
   end
