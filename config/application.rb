@@ -20,6 +20,6 @@ module RailsPhotoStore
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")    
-    Rails.application.routes.default_url_options[:host] = 'localhost:5000' if Rails.env == 'development'
+    Rails.application.routes.default_url_options[:host] = '0.0.0.0:5000' if Rails.env == 'development'
   end
 end

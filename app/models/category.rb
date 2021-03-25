@@ -10,10 +10,10 @@ class Category < ApplicationRecord
         description: product.description,
         price: product.price,
         price_unit: product.price_unit,
-        url: category_product_path(self, product),
-        image: path_for(product.image),
-        thumbnail: path_for(product.image.variant(resize_to_limit: [640, 640]).processed),
-        thumbnail_medium: path_for(product.image.variant(resize_to_limit: [1080, 1080]).processed),
+        url: category_product_url(self, product),
+        image: url_for(product.image),
+        thumbnail: url_for(product.image.variant(resize_to_limit: [640, 640]).processed),
+        thumbnail_medium: url_for(product.image.variant(resize_to_limit: [1080, 1080]).processed),
         dimensions_json: product.dimensions_json,
         lightbox: false
       }
