@@ -1,11 +1,11 @@
 class AdminsController < ApplicationController
   def index
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
     @admins = Admin.all
   end
 
   def show
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
   end
 
   def new
@@ -17,7 +17,7 @@ class AdminsController < ApplicationController
       admin = Admin.new(admin_params(:username, :email, :password))
       if admin.save
         flash[:notice] = 'Created new admin account'
-        redirect_to admin_path(admin)
+        redirect_to admin_signin_path
       else
         flash[:error] = 'Failed to create new admin account'
         redirect_to new_admin_path
@@ -29,7 +29,7 @@ class AdminsController < ApplicationController
   end
 
   def edit
-    @admin = redirect_unless_admin_signed_in
+    redirect_unless_admin_signed_in
   end
 
   def update
