@@ -5,12 +5,14 @@ class Product < ApplicationRecord
   has_many :price_modifiers, through: :dimensions, dependent: :destroy
   accepts_nested_attributes_for :price_modifiers
 
+  has_many :quantities
+  has_many :users, through: :quantities
+
   has_one_attached :image, dependent: :destroy do |image|
     image.variant :thumbnail, resize_to_limit: [640, 640]
     image.variant :thumbnail_medium, resize_to_limit: [1080, 1080]
   end
 
-  belongs_to :quantity, optional: true
   belongs_to :category, optional: false
 
   # Validations
@@ -19,6 +21,7 @@ class Product < ApplicationRecord
   validates :description, presence: true,
                           length: { minimum: 1, maximum: 1024, too_short: 'Please enter a description',
                                     too_long: '%{count} characters is the maximum allowed' }
+  validates :tags, length: { minimum: 0, maximum: 1024, too_long: '%{count} characters is the maximum allowed' }
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :price_unit, presence: true, inclusion: { in: %w[usd Usd USD],
                                                       message: '%{value} is not a valid unit, currently only USD is supported' }
@@ -40,6 +43,15 @@ class Product < ApplicationRecord
   scope :name_or_description_contains, lambda { |string|
                                          where('name LIKE ?', "%#{string}%").or(where('description LIKE ?', "%#{string}%"))
                                        }
+  scope :metadata_contains, lambda { |string|
+                              where('name LIKE ?', "%#{string}%")
+                                .or(where('description LIKE ?', "%#{string}%"))
+                                .or(where('tags LIKE ?', "%#{string}%"))
+                            }
+
+  def tags_to_a
+    tags.downcase.strip.split
+  end
 
   def dimensions_json
     JSON.generate(dimensions.collect do |dimension|

@@ -1,6 +1,5 @@
 class PriceModifier < ApplicationRecord
-  belongs_to :dimension
-  belongs_to :product, optional: true
+  belongs_to :dimension, optional: false
 
   validates :number, numericality: { greater_than_or_equal_to: 0 }, allow_nil: false
   validates :unit, presence: true, inclusion: { in: %w[usd Usd USD],
