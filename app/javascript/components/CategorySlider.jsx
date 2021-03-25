@@ -57,7 +57,7 @@ const CategorySlider = (props) => {
             image={product.image}
             dimensions_json={product.dimensions_json}
             lightbox={product.lightbox}
-            class_name='padding-1 margin-1 background-white'
+            class_name='padding-1 margin-1 background-white corner-rounded'
           />
         )
       })}
