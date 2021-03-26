@@ -1,6 +1,9 @@
 {
   "name": "rails-photo-store",
   "private": true,
+  "scripts": {
+    "start": "foreman start -f Procfile.dev"
+  },
   "dependencies": {
     "@babel/preset-react": "^7.12.13",
     "@rails/actioncable": "^6.0.0",
