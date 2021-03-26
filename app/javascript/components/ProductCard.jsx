@@ -34,9 +34,9 @@ const ProductCard = (props) => {
 
   return (
     <div className={`product-card shadow  corner-rounded ${props.class_name}`}>
-      <h1 className='product-title center'>
+      <h2 className='product-title center'>
         <a href={props.url}>{props.name}</a>
-      </h1>
+      </h2>
       <div
         className={`product-image-container${
           props.full_size ? ' full-size' : ''
@@ -74,9 +74,9 @@ const ProductCard = (props) => {
         />
       )}
       {props.show_description && (
-        <div className=''>
+        <div className='product-description-container'>
           <p className='tiny-text'>click image to see full size</p>
-          <p>{props.description}</p>
+          <p className='product-description'>{props.description}</p>
         </div>
       )}
       {json && !empty(json) ? (
