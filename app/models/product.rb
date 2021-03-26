@@ -10,8 +10,8 @@ class Product < ApplicationRecord
   has_many :users, through: :quantities
 
   has_one_attached :image, dependent: :destroy do |image|
-    image.variant :thumbnail, resize_to_limit: [640, 640]
-    image.variant :thumbnail_medium, resize_to_limit: [1080, 1080]
+    image.variant(:thumbnail, resize_to_limit: [640, 640])
+    image.variant(:thumbnail_medium, resize_to_limit: [1080, 1080])
   end
 
   belongs_to :category, optional: false
@@ -30,7 +30,9 @@ class Product < ApplicationRecord
 
   # Scopes
   scope :price_unit_is, lambda { |unit|
-                          where(price_unit: unit).or(where(price_unit: unit.upcase)).or(where(price_unit: unit.downcase))
+                          where(price_unit: unit.strip)
+                            .or(where(price_unit: unit.strip.upcase))
+                            .or(where(price_unit: unit.strip.downcase))
                         }
   scope :price_over, ->(price) { where('price > ?', price) }
   scope :price_under, ->(price) { where('price < ?', price) }
@@ -39,9 +41,9 @@ class Product < ApplicationRecord
   scope :width_over, ->(width) { joins(:dimensions).where('width > ?', width) }
   scope :width_under, ->(width) { joins(:dimensions).where('width < ?', width) }
   scope :weight_unit_is, lambda { |unit|
-                           where(weight_unit: unit)
-                             .or(where(weight_unit: unit.upcase))
-                             .or(where(weight_unit: unit.downcase))
+                           where(weight_unit: unit.strip)
+                             .or(where(weight_unit: unit.strip.upcase))
+                             .or(where(weight_unit: unit.strip.downcase))
                          }
   scope :weight_over, ->(weight) { joins(:dimensions).where('weight > ?', weight) }
   scope :weight_under, ->(weight) { joins(:dimensions).where('weight < ?', weight) }
@@ -49,9 +51,9 @@ class Product < ApplicationRecord
   scope :description_contains, ->(string) { where('description LIKE ?', "%#{string}%") }
   scope :tags_contains, ->(string) { where('tags LIKE ?', "%#{string}%") }
   scope :metadata_contains, lambda { |string|
-                              name_contains(string)
-                                .or(description_contains(string))
-                                .or(tags_contains(string))
+                              name_contains(string.strip)
+                                .or(description_contains(string.strip))
+                                .or(tags_contains(string.strip))
                             }
 
   # Instance methods
