@@ -18,21 +18,21 @@ const CategorySlider = (props) => {
     adaptiveHeight: false,
     responsive: [
       {
-        breakpoint: 1440,
+        breakpoint: 1600,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
         }
       },
       {
-        breakpoint: 1080,
+        breakpoint: 1200,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
         }
       },
       {
-        breakpoint: 720,
+        breakpoint: 800,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1

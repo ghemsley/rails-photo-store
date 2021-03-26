@@ -1862,7 +1862,7 @@ body {
     margin: auto;
     .product-image {
       object-fit: cover;
-      object-position: center;
+      object-position: center center;
     }
   }
   div {
@@ -2168,7 +2168,7 @@ element {
       overflow: hidden;
       .product-image {
         object-fit: cover;
-        object-position: 50% 50%;
+        object-position: center center;
         min-width: 540px;
         max-height: 360px;
       }
@@ -2200,30 +2200,22 @@ a {
 }
 
 .slick-track {
-  height: 100%;
   margin-top: 1em;
   margin-bottom: 1em;
   .slick-slide {
-    margin-top: auto;
     margin-bottom: 0px;
-
     div {
       .product-card {
         margin-left: 1em;
         margin-right: 1em;
-        max-height: min-content;
         .product-image-container {
-          max-height: min-content;
+          
           .product-image {
             width: 100%;
-            max-height: 33vh;
+            height: 33vh;
           }
         }
       }
     }
   }
-}
-
-div[data-react-class='ProductCard'] {
-  margin: auto;
 }
