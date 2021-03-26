@@ -18,10 +18,14 @@ module RailsPhotoStore
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    Rails.application.routes.default_url_options[:host] = if Rails.env == 'development' && RUBY_PLATFORM.include?('darwin')
+    Rails.application.routes.default_url_options[:host] = if Rails.env == 'development' &&
+                                                             RUBY_PLATFORM.include?('darwin')
                                                             'localhost:5000'
+                                                          elsif Rails.env == 'development' &&
+                                                                RUBY_PLATFORM.include?('linux')
+                                                            '45.56.76.170:5000'
                                                           else
-                                                            (Rails.env == 'development' ? '45.56.76.170:5000' : 'photos.grahamhemsley.com')
+                                                            'photos.grahamhemsley.com'
                                                           end
   end
 end
