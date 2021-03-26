@@ -1,13 +1,12 @@
 class SearchesController < ApplicationController
   def search
     @admin = get_admin_if_signed_in
-    if !(params[:query]&.strip.nil? || params[:query]&.strip == '')
-      @query = search_params(:query)
-      @products = Product.includes(dimensions: :price_modifier).metadata_contains(@query)
-    else
-      @query = ''
-      @products = []
-    end
+    @query = params[:query]
+    @products = if params[:filters].present?
+                  Product.includes(dimensions: :price_modifier).filter_metadata(@query, params[:filters])
+                else
+                  Product.includes(dimensions: :price_modifier).metadata_contains(@query)
+                end
   end
 
   private
