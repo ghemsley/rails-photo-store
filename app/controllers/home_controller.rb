@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
   def index
-    @categories = Category.all
+    @categories = Category.includes(products: { dimensions: :price_modifier })
   end
 end
