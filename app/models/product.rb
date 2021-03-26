@@ -29,32 +29,49 @@ class Product < ApplicationRecord
   validates_associated :dimensions
 
   # Scopes
+  scope :price_over, ->(price) { where('price > ?', price) }
+  scope :price_under, ->(price) { where('price < ?', price) }
   scope :price_unit_is, lambda { |unit|
                           where(price_unit: unit.strip)
                             .or(where(price_unit: unit.strip.upcase))
                             .or(where(price_unit: unit.strip.downcase))
                         }
-  scope :price_over, ->(price) { where('price > ?', price) }
-  scope :price_under, ->(price) { where('price < ?', price) }
   scope :length_over, ->(length) { joins(:dimensions).where('length > ?', length) }
   scope :length_under, ->(length) { joins(:dimensions).where('length < ?', length) }
   scope :width_over, ->(width) { joins(:dimensions).where('width > ?', width) }
   scope :width_under, ->(width) { joins(:dimensions).where('width < ?', width) }
-  scope :weight_unit_is, lambda { |unit|
-                           where(weight_unit: unit.strip)
-                             .or(where(weight_unit: unit.strip.upcase))
-                             .or(where(weight_unit: unit.strip.downcase))
-                         }
+  scope :height_over, ->(height) { joins(:dimensions).where('height > ?', height) }
+  scope :height_under, ->(height) { joins(:dimensions).where('height < ?', height) }
+  scope :distance_unit_is, lambda { |unit|
+                             joins(:dimensions).where(distance_unit: unit.strip)
+                                               .or(where(distance_unit: unit.strip.upcase))
+                                               .or(where(distance_unit: unit.strip.downcase))
+                           }
+
   scope :weight_over, ->(weight) { joins(:dimensions).where('weight > ?', weight) }
   scope :weight_under, ->(weight) { joins(:dimensions).where('weight < ?', weight) }
+  scope :weight_unit_is, lambda { |unit|
+                           joins(:dimensions).where(weight_unit: unit.strip)
+                                             .or(where(weight_unit: unit.strip.upcase))
+                                             .or(where(weight_unit: unit.strip.downcase))
+                         }
   scope :name_contains, ->(string) { where('name LIKE ?', "%#{string}%") }
   scope :description_contains, ->(string) { where('description LIKE ?', "%#{string}%") }
   scope :tags_contains, ->(string) { where('tags LIKE ?', "%#{string}%") }
   scope :metadata_contains, lambda { |string|
-                              name_contains(string.strip)
-                                .or(description_contains(string.strip))
-                                .or(tags_contains(string.strip))
+                              name_contains(string)
+                                .or(description_contains(string))
+                                .or(tags_contains(string))
                             }
+
+  # Class methods
+  def self.filter_metadata(query, filters)
+    search = metadata_contains(query)
+    filters.each do |param_name, param_value|
+      search = search.send(param_name, param_value) if param_value.present?
+    end
+    search
+  end
 
   # Instance methods
   def tags_to_a
