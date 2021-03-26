@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
   end
 
   def show
-    @category = Category.find(params[:id])
+    @category = Category.includes(products: { dimensions: :price_modifier }).find(params[:id])
   end
 
   def new
