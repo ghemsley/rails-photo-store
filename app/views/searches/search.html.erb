@@ -1,15 +1,17 @@
 <%= javascript_pack_tag 'productCard' %>
 <%= stylesheet_pack_tag 'productCard' %>
 <div class='pure-u-1 center'>
-  <div class='pure-u-1-3 fit-content background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded'>
+  <div class='pure-u-1 fit-content center background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded'>
     <h1 class='margin-0 horizontal-padding-1 uppercase'>Search results</h1>
-    <% if @query == '' || @products.empty? %>
+    <% if @products.empty? %>
       <p class='margin-0 horizontal-padding-1 subheading'>Your search returned no results</p>
+    <% elsif @query == '' || @query.nil? %>
+      <p class='margin-0 horizontal-padding-1 subheading'>Products matching your query</p>
     <% else %>
-      <p class='margin-0 horizontal-padding-1 subheading'>Products matching the search '<%= @query %>'</p>
+      <p class='margin-0 horizontal-padding-1 subheading'>Products matching the query '<%= @query %>'</p>
     <% end %>
   </div>
-  <div class='display-flex'>
+  <div class='display-flex margin-auto'>
     <% @products.each do |product| %>
       <div class='search-container'>
         <%= react_component('ProductCard', full_size: false, name: product.name, id: product.id, description: product.description, price: product.price, price_unit: product.price_unit, url: category_product_url(product.category, product), image: url_for(product.image), thumbnail: url_for(product.image.variant(resize_to_limit: [640, 640]).processed), thumbnail_medium: url_for(product.image.variant(resize_to_limit: [1080, 1080]).processed), dimensions_json: product.dimensions_json, lightbox: false, class_name: 'corner-rounded padding-1 margin-1 background-white' ) %>
@@ -17,6 +19,42 @@
           <%= link_to 'Edit', edit_category_product_path(product.category, product), class: 'pure-button center' %>
         <% end %>
       </div>
+    <% end %>
+  </div>
+  <div class='pure-u-1-3 background-white padding-1 shadow corner-rounded margin-vertical-1'>
+    <%= form_with url: "/search", method: :get, class: 'pure-form pure-form-aligned' do |form| %>
+      <%= form.hidden_field :query, value: @query %>
+      <fieldset>
+        <%= form.text_field :"filters[name_contains]", placeholder: 'Name contains:' %>
+        <%= form.text_field :"filters[description_contains]", placeholder: 'Description contains:' %>
+        <%= form.text_field :"filters[tags_contains]", placeholder: 'Tags contain:' %>
+      </fieldset>
+      <fieldset>
+        <%= form.number_field :"filters[price_over]", min: 0, placeholder: 'Price over:' %>
+        <%= form.number_field :"filters[price_under]", min: 0, placeholder: 'Price under:' %>
+        <%= form.text_field :"filters[price_unit_is]", placeholder: 'Price unit is:' %>
+      </fieldset>
+      <fieldset>
+        <fieldset>
+          <%= form.number_field :"filters[length_over]", min: 0, placeholder: 'Length over:' %>
+          <%= form.number_field :"filters[length_under]", min: 0, placeholder: 'Length under:' %>
+        </fieldset>
+        <fieldset>
+          <%= form.number_field :"filters[width_over]", min: 0, placeholder: 'Width over:' %>
+          <%= form.number_field :"filters[width_under]", min: 0, placeholder: 'Width under:' %>
+        </fieldset>
+        <fieldset>
+          <%= form.number_field :"filters[height_over]", min: 0, placeholder: 'Height over:' %>
+          <%= form.number_field :"filters[height_under]", min: 0, placeholder: 'Height under:' %>
+        </fieldset>
+        <%= form.text_field :"filters[distance_unit_is]", placeholder: 'Distance unit is:' %>
+      </fieldset>
+      <fieldset>
+        <%= form.number_field :"filters[weight_over]", min: 0, placeholder: 'Weight over:' %>
+        <%= form.number_field :"filters[weight_under]", min: 0, placeholder: 'Weight under:' %>
+        <%= form.text_field :"filters[weight_unit_is]", min: 0, placeholder: 'Weight unit is:' %>
+      </fieldset>
+      <%= form.submit 'Filter search' %>
     <% end %>
   </div>
 </div>
