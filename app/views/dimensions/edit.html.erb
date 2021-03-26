@@ -1,5 +1,5 @@
 <div class='pure-u-1 center'>
-  <h1>Edit dimension <%= @dimension.id %> for product <%= @product_id %></h1>
+  <h1>Edit dimension with id <%= @dimension.id %> for product <%= @product_id %></h1>
   <div class='form-container background-white'>
     <%= form_with model: @dimension, url: category_product_dimension_path(@category_id, @product_id, @dimension), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>

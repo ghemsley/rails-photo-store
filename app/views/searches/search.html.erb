@@ -11,12 +11,12 @@
       <p class='margin-0 horizontal-padding-1 subheading'>Products matching the query '<%= @query %>'</p>
     <% end %>
   </div>
-  <div class='display-flex margin-auto'>
+  <div class='display-flex margin-vertical-1'>
     <% @products.each do |product| %>
       <div class='search-container'>
-        <%= react_component('ProductCard', full_size: false, name: product.name, id: product.id, description: product.description, price: product.price, price_unit: product.price_unit, url: category_product_url(product.category, product), image: url_for(product.image), thumbnail: url_for(product.image.variant(resize_to_limit: [640, 640]).processed), thumbnail_medium: url_for(product.image.variant(resize_to_limit: [1080, 1080]).processed), dimensions_json: product.dimensions_json, lightbox: false, class_name: 'corner-rounded padding-1 margin-1 background-white' ) %>
+        <%= react_component('ProductCard', full_size: false, name: product.name, id: product.id, description: product.description, price: product.price, price_unit: product.price_unit, url: category_product_url(product.category, product), image: url_for(product.image), thumbnail: url_for(product.image.variant(resize_to_limit: [640, 640]).processed), thumbnail_medium: url_for(product.image.variant(resize_to_limit: [1080, 1080]).processed), dimensions_json: product.dimensions_json, lightbox: false, class_name: 'corner-rounded padding-1 background-white' ) %>
         <% if admin_signed_in? %>
-          <%= link_to 'Edit', edit_category_product_path(product.category, product), class: 'pure-button center' %>
+          <%= link_to 'Edit', edit_category_product_path(product.category, product), class: 'pure-button center margin-vertical-1' %>
         <% end %>
       </div>
     <% end %>
@@ -32,27 +32,22 @@
       <fieldset>
         <%= form.number_field :"filters[price_over]", min: 0, placeholder: 'Price over:' %>
         <%= form.number_field :"filters[price_under]", min: 0, placeholder: 'Price under:' %>
-        <%= form.text_field :"filters[price_unit_is]", placeholder: 'Price unit is:' %>
       </fieldset>
       <fieldset>
-        <fieldset>
-          <%= form.number_field :"filters[length_over]", min: 0, placeholder: 'Length over:' %>
-          <%= form.number_field :"filters[length_under]", min: 0, placeholder: 'Length under:' %>
-        </fieldset>
-        <fieldset>
-          <%= form.number_field :"filters[width_over]", min: 0, placeholder: 'Width over:' %>
-          <%= form.number_field :"filters[width_under]", min: 0, placeholder: 'Width under:' %>
-        </fieldset>
-        <fieldset>
-          <%= form.number_field :"filters[height_over]", min: 0, placeholder: 'Height over:' %>
-          <%= form.number_field :"filters[height_under]", min: 0, placeholder: 'Height under:' %>
-        </fieldset>
-        <%= form.text_field :"filters[distance_unit_is]", placeholder: 'Distance unit is:' %>
+        <%= form.number_field :"filters[length_over]", min: 0, placeholder: 'Length over:' %>
+        <%= form.number_field :"filters[length_under]", min: 0, placeholder: 'Length under:' %>
+      </fieldset>
+      <fieldset>
+        <%= form.number_field :"filters[width_over]", min: 0, placeholder: 'Width over:' %>
+        <%= form.number_field :"filters[width_under]", min: 0, placeholder: 'Width under:' %>
+      </fieldset>
+      <fieldset>
+        <%= form.number_field :"filters[height_over]", min: 0, placeholder: 'Height over:' %>
+        <%= form.number_field :"filters[height_under]", min: 0, placeholder: 'Height under:' %>
       </fieldset>
       <fieldset>
         <%= form.number_field :"filters[weight_over]", min: 0, placeholder: 'Weight over:' %>
         <%= form.number_field :"filters[weight_under]", min: 0, placeholder: 'Weight under:' %>
-        <%= form.text_field :"filters[weight_unit_is]", min: 0, placeholder: 'Weight unit is:' %>
       </fieldset>
       <%= form.submit 'Filter search' %>
     <% end %>

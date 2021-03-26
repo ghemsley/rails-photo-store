@@ -10,7 +10,6 @@ class DimensionsController < ApplicationController
     dimension = Dimension.new(dimension_params(:length, :width, :height, :weight, :distance_unit, :weight_unit,
                                                price_modifier_attributes: %i[number unit]))
     dimension.product_id = params[:product_id]
-    dimension.price_modifier.product_id = dimension.product_id
     if dimension.save
       flash[:notice] = "Created dimension #{dimension.id}"
       redirect_to category_product_path(dimension.product.category, dimension.product)
@@ -30,7 +29,6 @@ class DimensionsController < ApplicationController
   def update
     dimension = Dimension.find(params[:id])
     dimension.update(dimension_params(:length, :width, :height, :weight, :distance_unit, :weight_unit))
-    dimension.price_modifier.product_id = dimension.product_id
     dimension.price_modifier.update(price_modifier_params(:number, :unit))
     redirect_to category_product_path(dimension.product.category, dimension.product)
   end
