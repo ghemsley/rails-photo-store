@@ -43,17 +43,17 @@ class Product < ApplicationRecord
   scope :height_over, ->(height) { joins(:dimensions).where('height > ?', height) }
   scope :height_under, ->(height) { joins(:dimensions).where('height < ?', height) }
   scope :distance_unit_is, lambda { |unit|
-                             joins(:dimensions).where(distance_unit: unit.strip)
-                                               .or(where(distance_unit: unit.strip.upcase))
-                                               .or(where(distance_unit: unit.strip.downcase))
+                             joins(:dimensions).where('distance_unit = ?', unit.strip)
+                                               .or(where('distance_unit = ?', unit.strip.upcase))
+                                               .or(where('distance_unit = ?', unit.strip.downcase))
                            }
 
   scope :weight_over, ->(weight) { joins(:dimensions).where('weight > ?', weight) }
   scope :weight_under, ->(weight) { joins(:dimensions).where('weight < ?', weight) }
   scope :weight_unit_is, lambda { |unit|
-                           joins(:dimensions).where(weight_unit: unit.strip)
-                                             .or(where(weight_unit: unit.strip.upcase))
-                                             .or(where(weight_unit: unit.strip.downcase))
+                           joins(:dimensions).where('weight_unit = ?', unit.strip)
+                                             .or(where('weight_unit = ?', unit.strip.upcase))
+                                             .or(where('weight_unit = ?', unit.strip.downcase))
                          }
   scope :name_contains, ->(string) { where('name LIKE ?', "%#{string}%") }
   scope :description_contains, ->(string) { where('description LIKE ?', "%#{string}%") }
@@ -61,7 +61,7 @@ class Product < ApplicationRecord
   scope :metadata_contains, lambda { |string|
                               name_contains(string)
                                 .or(description_contains(string))
-                                .or(tags_contains(string))
+                                .or(tags_contains(string.strip))
                             }
 
   # Class methods

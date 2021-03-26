@@ -35,10 +35,10 @@
         <ul class='pure-menu-list margin-auto padding-0'>
           <% if admin_signed_in? && @admin %>
             <li class='pure-menu-item'>
-              <%= link_to 'Sign out', admin_signout_path, class: 'pure-menu-link pure-button' %>
+              <%= link_to 'Sign out', admin_signout_path, class: 'pure-menu-link' %>
             </li>
             <li class='pure-menu-item'>
-              <%= link_to 'Admin', admin_path(@admin), class: 'pure-menu-link pure-button' %>
+              <%= link_to 'Admin', admin_path(@admin), class: 'pure-menu-link' %>
             </li>
             <li class='pure-menu-item'>
               <%= link_to 'Users', users_path, class: 'pure-menu-link' %>
