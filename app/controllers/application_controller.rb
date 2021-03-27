@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
   before_action :get_admin_if_signed_in, only: %i[index show new edit]
 
+  before_action do
+    ActiveStorage::Current.host = request.base_url
+  end
+
   private
 
   def redirect_unless_signed_in
