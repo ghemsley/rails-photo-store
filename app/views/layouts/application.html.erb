@@ -8,7 +8,9 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application' %>
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.css"/>
+    <link rel="stylesheet" type='text/css' href="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.css"/>
+    <link rel='stylesheet' type='text/css' href='https://unpkg.com/purecss@2.0.5/build/pure-min.css'/>
+    <link rel='stylesheet' type='text/css' href='https://unpkg.com/purecss@2.0.5/build/grids-responsive-min.css'/>
   </head>
 
   <body>
@@ -21,8 +23,8 @@
       <% end %>
     <% end %>
     <div class='pure-g'>
-      <div id='header' class='header pure-u-1 pure-menu-scrollable pure-menu-horizontal margin-bottom-1 shadow background-white padding-0'>
-        <ul class='pure-menu-list margin-auto padding-0'>
+      <div id='header' class='header margin-auto pure-u-1 pure-menu-horizontal pure-menu-scrollable margin-bottom-1 shadow background-white'>
+        <ul id='title-container' class='pure-menu-list padding-0 title-container'>
           <li class='pure-menu-item'>
             <a href=<%= root_path %>>
               <div class='pure-menu-heading pure-menu-link'>
@@ -32,7 +34,7 @@
             </a>
           </li>
         </ul>
-        <ul class='pure-menu-list margin-auto padding-0'>
+        <ul id='links-container' class='pure-menu-list padding-0 links-container'>
           <% if admin_signed_in? && @admin %>
             <li class='pure-menu-item'>
               <%= link_to 'Sign out', admin_signout_path, class: 'pure-menu-link' %>
