@@ -22,18 +22,16 @@
         </div>
       <% end %>
     <% end %>
-    <div id='header' class='pure-menu pure-menu-horizontal pure-menu-scrollable margin-bottom-1 shadow background-white'>
-      <ul id='title-container' class='pure-menu-list'>
+    <div id='header' class='pure-g pure-menu pure-menu-horizontal pure-menu-scrollable margin-bottom-1 shadow background-white'>
+      <ul id='title-container' class='pure-u-1 pure-menu-list'>
         <li class='pure-menu-item'>
-          <a href=<%= root_path %>>
-            <div class='pure-menu-heading pure-menu-link'>
-              <p class='margin-auto site-title'>Graham Hemsley</p>
-              <p class='subtitle lowercase margin-auto'>Photo Prints</p>
-            </div>
+          <a href=<%= root_path %> class='pure-menu-link pure-menu-heading'>
+            <p class='margin-auto site-title'>Graham Hemsley</p>
+            <p class='subtitle lowercase margin-auto'>Photo Prints</p>
           </a>
         </li>
       </ul>
-      <ul id='links-container' class='pure-menu-list'>
+      <ul id='links-container' class='pure-u-1 pure-menu-list'>
         <% if admin_signed_in? && @admin %>
           <li class='pure-menu-item'>
             <%= link_to 'Sign out', admin_signout_path, class: 'pure-menu-link' %>

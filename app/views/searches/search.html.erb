@@ -1,7 +1,7 @@
 <%= javascript_pack_tag 'productCard' %>
 <%= stylesheet_pack_tag 'productCard' %>
-<div class='pure-u-1-1 center'>
-  <div class='pure-u-1-4 fit-content center background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded'>
+<div class='pure-u-1 center'>
+  <div class='pure-u-1 fit-content background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded white-space-nowrap'>
     <h1 class='margin-0 horizontal-padding-1 uppercase'>Search results</h1>
     <% if @products.empty? %>
       <p class='margin-0 horizontal-padding-1 subheading'>Your search returned no results</p>
@@ -11,17 +11,17 @@
       <p class='margin-0 horizontal-padding-1 subheading'>Products matching the query '<%= @query %>'</p>
     <% end %>
   </div>
-  <div class='display-flex margin-vertical-1'>
+  <div class='display-flex margin-vertical-1 search-results-container'>
     <% @products.each do |product| %>
       <div class='search-container'>
-        <%= react_component('ProductCard', full_size: false, name: product.name, id: product.id, description: product.description, price: product.price, price_unit: product.price_unit, url: category_product_url(product.category, product), image: url_for(product.image), thumbnail: url_for(product.image.variant(resize_to_limit: [640, 640]).processed), thumbnail_medium: url_for(product.image.variant(resize_to_limit: [1080, 1080]).processed), dimensions_json: product.dimensions_json, lightbox: false, class_name: 'corner-rounded padding-1 background-white' ) %>
+        <%= react_component('ProductCard', full_size: false, name: product.name, id: product.id, description: product.description, price: product.price, price_unit: product.price_unit, url: category_product_url(product.category, product), image: url_for(product.image.variant(resize_to_limit: [1440, 1440]).processed), thumbnail: url_for(product.image.variant(resize_to_limit: [640, 640]).processed), thumbnail_medium: url_for(product.image.variant(resize_to_limit: [1080, 1080]).processed), dimensions_json: product.dimensions_json, lightbox: false, class_name: 'corner-rounded padding-1 background-white' ) %>
         <% if admin_signed_in? %>
           <%= link_to 'Edit', edit_category_product_path(product.category, product), class: 'pure-button center margin-vertical-1' %>
         <% end %>
       </div>
     <% end %>
   </div>
-  <div class='pure-u-1-3 background-white padding-1 shadow corner-rounded margin-vertical-1'>
+  <div class='pure-u-1 fit-content background-white padding-1 shadow corner-rounded margin-vertical-1'>
     <%= form_with url: "/search", method: :get, class: 'pure-form pure-form-aligned' do |form| %>
       <%= form.hidden_field :query, value: @query %>
       <fieldset>
