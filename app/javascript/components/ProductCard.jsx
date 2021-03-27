@@ -44,7 +44,7 @@ const ProductCard = (props) => {
       >
         <img
           src={props.thumbnail}
-          srcSet={`${props.thumbnail} 640w, ${props.thumbnail_medium} 1080w, ${props.image} 1440w`}
+          srcSet={`${props.thumbnail} 640w, ${props.thumbnail_medium} 1080w${props.full_size ? `, ${props.thumbnail_large} 1440w` : ''}`}
           sizes='(max-width: 640px) 640px,
                  (max-width: 1080px) 1080px,
                  1440px'
@@ -98,7 +98,7 @@ const ProductCard = (props) => {
             data-item-price={props.price}
             data-item-url={props.url}
             data-item-description={props.description}
-            data-item-image={props.image}
+            data-item-image={props.thumbnail}
             data-item-name={props.name}
             data-item-stackable='never'
             data-item-custom1-name='Size'
