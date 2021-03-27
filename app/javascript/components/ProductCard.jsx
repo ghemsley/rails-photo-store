@@ -43,7 +43,7 @@ const ProductCard = (props) => {
         }`}
       >
         <img
-          src={props.image}
+          src={props.thumbnail}
           srcSet={`${props.thumbnail} 640w, ${props.thumbnail_medium} 1080w, ${props.image} 1440w`}
           sizes='(max-width: 640px) 640px,
                  (max-width: 1080px) 1080px,

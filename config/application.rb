@@ -27,5 +27,6 @@ module RailsPhotoStore
                                                           else
                                                             'photos.grahamhemsley.com'
                                                           end
+    # config.active_storage.variant_processor = :vips
   end
 end

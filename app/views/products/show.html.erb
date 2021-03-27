@@ -1,7 +1,7 @@
 <%= javascript_pack_tag 'productCard' %>
 <%= stylesheet_pack_tag 'productCard' %>
 <div class='pure-u-1 center margin-vertical-1'>
-  <%= react_component('ProductCard', full_size: true, show_description: true, name: @product.name, id: @product.id, description: @product.description, price: @product.price, price_unit: @product.price_unit, url: category_product_url(@product.category, @product), image: url_for(@product.image), thumbnail: url_for(@product.image.variant(resize_to_limit: [640, 640]).processed), thumbnail_medium: url_for(@product.image.variant(resize_to_limit: [1080, 1080]).processed), dimensions_json: @product.dimensions_json, lightbox: true, class_name: 'corner-rounded margin-auto padding-1 full-size background-white' ) %>
+  <%= react_component('ProductCard', full_size: true, show_description: true, name: @product.name, id: @product.id, description: @product.description, price: @product.price, price_unit: @product.price_unit, url: category_product_url(@product.category, @product), image: url_for(@product.image), thumbnail: @product.image.variant(resize_to_limit: [640, 640]).processed.url, thumbnail_medium: @product.image.variant(resize_to_limit: [1080, 1080]).processed.url, dimensions_json: @product.dimensions_json, lightbox: true, class_name: 'corner-rounded margin-auto padding-1 full-size background-white' ) %>
 </div>
 <% if admin_signed_in? %>
   <div class='pure-u-1 padding-1 column center center-children'>
