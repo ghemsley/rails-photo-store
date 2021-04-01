@@ -4,17 +4,21 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_or_create_by(email: params[:user][:email])
-    if user
+    user = User.find_by(email: params[:user][:email]) if params[:user][:email]
+    if user&.authenticate(params[:user][:password])
       session[:current_user_id] = user.id
-      puts user
+      flash[:notice] = 'Signed in'
+      redirect_to user_path(user)
+    else
+      flash[:error] = 'Failed to sign in'
+      redirect_to signin_form_path
     end
   end
 
   def destroy
     user = User.find_by_id(session[:current_user_id]) if session[:current_user_id]
-    session.delete(:current_user_id) if session[:current_user_id]
-    puts user if user
+    session.delete(:current_user_id) if user
+    redirect_to root_path
   end
 
   def admin_create
