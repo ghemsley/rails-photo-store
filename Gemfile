@@ -7,8 +7,6 @@ ruby '2.6.6'
 gem 'rails', '~> 6.1.3'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
-# Use Puma as the app server
-gem 'puma', '~> 5.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -26,6 +24,8 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'image_processing', '~> 1.2'
 gem 'mini_magick'
 # gem 'ruby-vips'
+
+gem "passenger", ">= 5.3.2", require: "phusion_passenger/rack_handler"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
