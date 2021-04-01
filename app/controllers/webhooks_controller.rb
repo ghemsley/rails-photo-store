@@ -1,29 +1,31 @@
-# Source code based on example at https://docs.snipcart.com/v3/webhooks/examples
 class WebhooksController < ApplicationController
-  def webhook
+  def foxycart_webhook
+    unless request.headers['Foxy-Store-ID'] == '97720' && request.headers['Foxy-Webhook-Event'] == 'transaction/created'
+      return
+    end
+
     data = ActiveSupport::JSON.decode(request.body.read)
-    case data[:eventName]
-    when 'order.completed'
-      user_uuid = data[:content][:user][:id]
-      user = User.find_or_create_by(uuid: user_uuid)
-      products = data[:content][:items].collect do |item|
-        { id: Product.find(item[:id].to_i)&.id, amount: item[:quantity]&.to_i }
-      end
-      products.each do |product|
-        quantity = Quantity.new(user_id: user&.id, product_id: product[:id], amount: product[:amount])
-        if quantity.save
-          puts "Saved quantity #{quantity.id}
-                user_id: #{quantity.user_id}
-                product_id: #{quantity.product_id}
-                amount: #{quantity.amount}"
-        else
-          puts quantity.errors.full_messages
-        end
+    uuid = data['_embedded']['fx:customer']['id'].to_s
+    user = User.find_or_create_by(uuid: uuid)
+    return unless user.valid?
+
+    email = data['_embedded']['fx:customer']['email']
+    user.email = email
+    return unless user.save
+
+    data['_embedded']['fx:items'].each do |item|
+      product = Product.find(item['code'])
+      next unless product
+
+      quantity = Quantity.find_or_create_by(user_id: user.id, product_id: product.id)
+      next unless quantity.valid?
+
+      quantity.amount += item['quantity']
+      if quantity.save
+        puts "Saved new quantity #{quantity.id} for user #{user.id} and product #{product.id} with amount #{quantity.amount}"
+      else
+        puts quantity.errors.full_messages
       end
     end
-  rescue StandardError
-    head :bad_request
-  else
-    head :ok
   end
 end
