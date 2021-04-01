@@ -28,5 +28,6 @@ module RailsPhotoStore
                                                             'photos.grahamhemsley.com'
                                                           end
     # config.active_storage.variant_processor = :vips
+    BCrypt::Engine::DEFAULT_COST = 10
   end
 end
