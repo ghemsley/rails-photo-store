@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_secure_password
   has_many :quantities
   has_many :products, through: :quantities
   has_many :orders
@@ -7,5 +8,4 @@ class User < ApplicationRecord
   has_one :cart
 
   validates :email, uniqueness: true
-  validates :uuid, uniqueness: true
 end

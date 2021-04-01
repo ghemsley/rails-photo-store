@@ -11,10 +11,10 @@ class Category < ApplicationRecord
         price: product.price,
         price_unit: product.price_unit,
         url: category_product_url(self, product),
-        image: url_for(product.image.variant(resize_to_limit: [1440, 1440]).processed),
-        thumbnail: url_for(product.image.variant(resize_to_limit: [640, 640]).processed),
-        thumbnail_medium: url_for(product.image.variant(resize_to_limit: [1080, 1080]).processed),
-        thumbnail_large: url_for(product.image.variant(resize_to_limit: [1440, 1440]).processed),
+        image: product.image.url,
+        thumbnail: product.image.variant(resize_to_limit: [480, 720]).processed.url,
+        thumbnail_medium: product.image.variant(resize_to_limit: [960, 1440]).processed.url,
+        thumbnail_large: product.image.variant(resize_to_limit: [1440, 2160]).processed.url,
         dimensions_json: product.dimensions_json,
         lightbox: false
       }

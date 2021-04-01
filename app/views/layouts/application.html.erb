@@ -8,13 +8,12 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application' %>
-    <link rel="stylesheet" type='text/css' href="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.css"/>
     <link rel='stylesheet' type='text/css' href='https://unpkg.com/purecss@2.0.5/build/pure-min.css'/>
     <link rel='stylesheet' type='text/css' href='https://unpkg.com/purecss@2.0.5/build/grids-responsive-min.css'/>
+    <script data-cfasync="false" src="https://cdn.foxycart.com/ghemsleyphotos/loader.js" async defer></script>
   </head>
 
   <body>
-    <div hidden id="snipcart" data-api-key=<%= snipcart_api_key %> data-config-modal-style="side"></div>
     <% if flash %>
       <% flash.each do |message_name, message_value| %>
         <div class="flash <%= message_name.to_s %>">
@@ -32,7 +31,7 @@
         </li>
       </ul>
       <ul id='links-container' class='pure-u-1 pure-menu-list'>
-        <% if admin_signed_in? && @admin %>
+        <% if admin_signed_in? %>
           <li class='pure-menu-item'>
             <%= link_to 'Sign out', admin_signout_path, class: 'pure-menu-link' %>
           </li>
@@ -42,6 +41,18 @@
           <li class='pure-menu-item'>
             <%= link_to 'Users', users_path, class: 'pure-menu-link' %>
           </li>
+          </li>
+        <% end %>
+        <% if signed_in? %>
+          <li class='pure-menu-item'>
+            <%= link_to 'Sign out', signout_path, class: 'pure-menu-link' %>
+          </li>
+        <% else %>
+          <li class='pure-menu-item'>
+            <%= link_to 'Sign in', signin_form_path, class: 'pure-menu-link' %>
+          </li>
+          <li class='pure-menu-item'>
+            <%= link_to 'Sign up', new_user_path, class: 'pure-menu-link' %>
           </li>
         <% end %>
         <% Category.all.each do |category| %>
@@ -55,7 +66,7 @@
           <% end %>
         </li>
         <li class='pure-menu-item'>
-          <button class="snipcart-checkout button-cart pure-button button-success">
+          <a class="button-cart pure-button button-success" href='https://ghemsleyphotos.foxycart.com/cart?cart=view'>
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="512px" height="512px" viewBox="0 0 512 512">
               <g>
@@ -68,17 +79,13 @@
                   M356.117,256H106.68L40.008,96H385.18L356.117,256z"/>
               </g>
             </svg>
-            <span class='snipcart-items-count'>
-          </button>
-        </li>
-        <li class='pure-menu-item'>
-          <button class="snipcart-customer-signin pure-menu-link button-unstyle">My account</button>
+            <span data-fc-id='minicart-quantity'></span>
+          </a>
         </li>
       </ul>
     </div>
     <div id='content' class='content pure-g'>
       <%= yield %>
     </div>
-    <script async src="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.js" ></script>
   </body>
 </html>

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :get_admin_if_signed_in, only: %i[index show new edit]
+  before_action :get_user_if_signed_in, only: %i[index show new edit]
 
   before_action do
     ActiveStorage::Current.host = request.base_url
@@ -8,13 +9,18 @@ class ApplicationController < ActionController::Base
   private
 
   def redirect_unless_signed_in
-    if session[:current_user_id]
-      user = User.find(session[:current_user_id])
-      return user if user
-    end
+    return @user if session[:current_user_id] && @user
 
     flash[:error] = 'Unauthorized'
     redirect_to root_path
+    nil
+  end
+
+  def get_user_if_signed_in
+    if session[:current_user_id]
+      @user = User.find(session[:current_user_id])
+      return @user if @user
+    end
     nil
   end
 

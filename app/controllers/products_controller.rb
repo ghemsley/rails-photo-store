@@ -21,7 +21,6 @@ class ProductsController < ApplicationController
   def create
     product = Product.new
     if create_product(product)
-      flash[:info] = 'Snipcart response: ' + create_snipcart_product(product).to_s if Rails.env == 'production'
       redirect_to category_product_path(product.category, product)
     else
       redirect_to new_category_product_path(Category.find(product.category_id), product)
@@ -56,27 +55,6 @@ class ProductsController < ApplicationController
   end
 
   private
-
-  def create_snipcart_product(product)
-    secret = helpers.snipcart_private_api_key_base64
-    uri = URI(helpers.snipcart_api_url + '/products')
-    req = Net::HTTP::Post.new(uri)
-    req['Accept'] = 'application/json'
-    req['Content-Type'] = 'application/json'
-    req['Authorization'] = "Basic #{secret}"
-    req.body = { fetchUrl: category_product_url(product.category, product) }.to_json
-
-    res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-      http.request(req)
-    end
-
-    case res
-    when Net::HTTPSuccess, Net::HTTPRedirection
-      puts res
-    else
-      puts res.value
-    end
-  end
 
   def create_product(product)
     if product.update(product_params(:name, :description, :tags, :price, :price_unit, :image, :category_id,

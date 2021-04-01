@@ -2,8 +2,6 @@
   <h1>Edit account info</h1>
   <div class='form-container background-white'>
     <%= form_with model: @user, url: user_path(@user), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
-      <%= f.label :username, 'Username' %>
-      <%= f.text_field :username %>
       <%= f.label :email, 'Email' %>
       <%= f.text_field :email %>
       <% if !@admin %>
@@ -16,7 +14,6 @@
         <%= f.label  :password, 'Password' %>
         <%= f.password_field :password %>
       <% end %>
-      <%= f.hidden_field :id, value: @user.id %>
       <%= f.submit 'Update account info' %>
     <% end %>
   </div>
