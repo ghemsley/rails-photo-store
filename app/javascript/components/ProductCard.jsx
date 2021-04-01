@@ -1,11 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { hot } from 'react-hot-loader'
 import Lightbox from 'react-awesome-lightbox'
 import 'react-awesome-lightbox/build/style.css'
-
-const disable = (event) => {
-  event.preventDefault()
-}
 
 const empty = (object) => {
   if (
@@ -21,11 +17,38 @@ const empty = (object) => {
   }
 }
 
+const getClientDimensions = () => {
+  const width = window.innerWidth
+  const height = window.innerHeight
+  return { width, height }
+}
+
+const disable = (event) => {
+  event.preventDefault()
+}
+
 const ProductCard = (props) => {
   if (props.dimensions_json) {
     var json = JSON.parse(props.dimensions_json)
   }
+  const [windowDimensions, setWindowDimensions] = useState(getClientDimensions)
+  useEffect(() => {
+    const updateDimensions = () => {
+      setWindowDimensions(getClientDimensions)
+    }
+    window.addEventListener('resize', updateDimensions)
+    return () => {
+      window.removeEventListener('resize', updateDimensions)
+    }
+  })
   const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState(json[0].distances_string)
+  const [loaded, setLoaded] = useState(false)
+  const [price, setPrice] = useState(0)
+  const urlRegex = new RegExp(/\/products\/\d+$/i)
+  window.addEventListener('load', (event) => {
+    setLoaded(true)
+  })
   if (open) {
     window.addEventListener('contextmenu', disable)
   } else {
@@ -43,11 +66,11 @@ const ProductCard = (props) => {
         }`}
       >
         <img
-          src={props.thumbnail}
-          srcSet={`${props.thumbnail} 640w, ${props.thumbnail_medium} 1080w, ${props.image} 1440w`}
-          sizes='(max-width: 640px) 640px,
-                 (max-width: 1080px) 1080px,
-                 1440px'
+          src={
+            urlRegex.test(window.location.href)
+              ? props.thumbnail_medium
+              : props.thumbnail
+          }
           className={`product-image pure-img`}
           onClick={() => {
             if (props.lightbox) {
@@ -74,63 +97,80 @@ const ProductCard = (props) => {
         />
       )}
       {props.show_description && (
-        <div className='product-description-container'>
-          <p className='tiny-text'>click image to see full size</p>
-          <p className='product-description'>{props.description}</p>
-        </div>
-      )}
-      {json && !empty(json) ? (
-        <div className='price-cart-button-container'>
-          <p className='price-blurb'>{`Price: Starts at $${parseFloat(
-            props.price
-          ).toFixed(2)}`}</p>
-          {props.show_description && (
-            <>
-              <p>Sizes available:</p>
-              {json.map((dimension, i) => {
-                return <p key={i}>{`${dimension.distances_string}`}</p>
-              })}
-            </>
-          )}
-          <button
-            className='snipcart-add-item cart-button pure-button button-success center'
-            data-item-id={props.id}
-            data-item-price={props.price}
-            data-item-url={props.url}
-            data-item-description={props.description}
-            data-item-image={props.image}
-            data-item-name={props.name}
-            data-item-stackable='never'
-            data-item-custom1-name='Size'
-            data-item-custom1-options={`${json.map((dimension, i) => {
-              if (i + 1 == json.length) {
-                return `${dimension.distances_string}[+${dimension.price_modifier}]`
-              } else {
-                return `${dimension.distances_string}[+${dimension.price_modifier}]|`
-              }
-            })}`.replace(',', '')}
-          >
-            Add to cart
-          </button>
-        </div>
-      ) : (
-        <div className='price-cart-button padding-1'>
-          <p className='price-blurb'>{`Price: $${parseFloat(
-            props.price
-          ).toFixed(2)}`}</p>
-          <div className='price-cart-button-container'>
-            <button
-              className='snipcart-add-item cart-button pure-button button-success center'
-              data-item-id={props.id}
-              data-item-price={props.price}
-              data-item-url={props.url}
-              data-item-description={props.description}
-              data-item-image={props.image}
-              data-item-name={props.name}
-            >
-              Add to cart
-            </button>
+        <>
+          <div className='product-description-container'>
+            <p className='tiny-text'>click image to see full size</p>
+            <p className='product-description'>{props.description}</p>
           </div>
+
+          <div className='price-cart-button-container'>
+            <form className='pure-form margin-vertical-1'>
+              <label>Sizes available: </label>
+              <select
+                id='size-select-dropdown'
+                value={selected}
+                onChange={(event) => {
+                  console.log(json)
+                  console.log(json[0].distances_string)
+                  console.log(event.currentTarget.value)
+                  // event.target.value.match(/\+\d+.?\d*/m)[0]
+                  setSelected(event.currentTarget.value)
+                  json.forEach((dimension, i) => {
+                    if (
+                      dimension.distances_string == event.currentTarget.value
+                    ) {
+                      setPrice(dimension.price_modifier)
+                    }
+                  })
+                }}
+              >
+                {json.map((dimension, i) => {
+                  return (
+                    <option key={i} value={dimension.distances_string}>
+                      {dimension.distances_string}
+                    </option>
+                  )
+                })}
+              </select>
+            </form>
+            <p className='margin-0 padding-0 price-blurb'>{`Price: $${(
+              parseFloat(props.price) + parseFloat(price)
+            ).toFixed(2)}`}</p>
+            {loaded && (
+              <>
+                <br />
+                <a
+                  className='cart-button pure-button button-success center'
+                  href={`https://ghemsleyphotos.foxycart.com/cart?name=${props.name.replace(
+                    ' ',
+                    '+'
+                  )}&price=${props.price}&image=${props.thumbnail}&url=${
+                    props.url
+                  }&code=${props.id}&size=${document
+                    .getElementById('size-select-dropdown')
+                    .value.split(' ')
+                    .join('%20')}{p+${
+                    json.find(
+                      (dimension) => dimension.distances_string == selected
+                    ).price_modifier
+                  }}`}
+                >
+                  Add to cart
+                </a>
+              </>
+            )}
+          </div>
+        </>
+      )}
+      {!props.show_description && (
+        <div className='price-cart-button-container'>
+          <br />
+          <a
+            className='cart-button pure-link pure-button button-success center'
+            href={props.url}
+          >
+            View product
+          </a>
         </div>
       )}
     </div>

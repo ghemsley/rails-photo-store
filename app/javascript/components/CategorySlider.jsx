@@ -57,6 +57,7 @@ const CategorySlider = (props) => {
             image={product.image}
             thumbnail={product.thumbnail}
             thumbnail_medium={product.thumbnail_medium}
+            thumbnail_large={product.thumbnail_large}
             dimensions_json={product.dimensions_json}
             lightbox={product.lightbox}
             class_name='padding-1 background-white corner-rounded'
