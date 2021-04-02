@@ -25,9 +25,11 @@ Rails.application.routes.draw do
   post '/admin_signin', to: 'sessions#admin_create', as: :admin_signin
   get '/admin_signout', to: 'sessions#admin_destroy', as: :admin_signout
 
+  get '/sso_redirect', to: 'sessions#sso_redirect', as: :sso_redirect
+
   get '/search', to: 'searches#search', as: :search
 
-  post '/foxycart_webhook', to: 'webhooks#foxycart_webhook'
+  post '/foxycart_webhook', to: 'webhooks#foxycart_webhook', as: :foxycart_webhook
 
   root to: 'home#index'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
