@@ -61,6 +61,9 @@
           </li>
         <% end %>
         <li class='pure-menu-item'>
+          <%= link_to 'Popular', quantities_path, class: 'pure-menu-link' %>
+        </li>
+        <li class='pure-menu-item'>
           <%= form_with url: "/search", method: :get, class: 'pure-form pure-form margin-auto padding-0' do |form| %>
             <%= form.text_field :query, placeholder: 'Search' %>
           <% end %>
