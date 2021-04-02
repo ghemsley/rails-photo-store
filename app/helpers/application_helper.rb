@@ -1,7 +1,7 @@
 require 'base64'
 module ApplicationHelper
   def admin_secret
-    ENV['RAILS_ADMIN_SECRET']
+    Rails.application.credentials.rails_admin_secret
   end
 
   def signed_in?
@@ -39,7 +39,7 @@ module ApplicationHelper
       req['Authorization'] = if access_token
                                "Bearer #{access_token}"
                              else
-                               "Bearer #{ENV.fetch('NEW_FOXYCART_ACCESS_TOKEN', ENV['FOXYCART_ACCESS_TOKEN'])}"
+                               "Bearer #{ENV['NEW_FOXYCART_ACCESS_TOKEN'] || Rails.application.credentials.foxycart_access_token }"
                              end
       if method&.downcase == 'post'
         if request_data.respond_to?('deep_stringify_keys')
@@ -52,7 +52,7 @@ module ApplicationHelper
       req = Net::HTTP::Post.new(uri)
       req['Content-Type'] = 'application/hal+json'
       req['FOXY-API-VERSION'] = '1'
-      auth = Base64.strict_encode64("#{ENV['FOXYCART_CLIENT_ID']}:#{ENV['FOXYCART_CLIENT_SECRET']}")
+      auth = Base64.strict_encode64("#{Rails.application.credentials.foxycart_client_id}:#{Rails.application.credentials.foxycart_client_secret}")
       req['Authorization'] = "Basic #{auth}"
       req.set_form_data('grant_type' => 'refresh_token', 'refresh_token' => refresh_token)
     end
@@ -85,7 +85,7 @@ module ApplicationHelper
       end
     when Net::HTTPUnauthorized
       puts 'Unauthorized: Refreshing token...'
-      new_res = foxycart_api_request(refresh_token: ENV['FOXYCART_REFRESH_TOKEN'])
+      new_res = foxycart_api_request(refresh_token: Rails.application.credentials.foxycart_refresh_token)
       case new_res
       when Net::HTTPSuccess, Net::HTTPRedirection
         pp new_res
