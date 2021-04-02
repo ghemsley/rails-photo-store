@@ -560,7 +560,11 @@ element {
   .product-card {
     margin: auto;
     .product-image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
+      max-width: 85vw;
       .product-image {
         object-fit: cover;
         object-position: center center;
@@ -665,7 +669,7 @@ body,
 .display-flex {
   .product-card {
     .product-image-container {
-      max-width: 85vw;
+      
     }
   }
 }
