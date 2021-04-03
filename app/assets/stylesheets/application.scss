@@ -655,7 +655,13 @@ a {
   justify-content: space-evenly;
 }
 
+#content {
+  min-height: calc(100vh - 140px - 1em);
+}
+
 #footer {
+  margin-top: 1em;
+  height: 40px;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
