@@ -109,7 +109,7 @@ class SessionsController < ApplicationController
   end
 
   def reverse_sso_redirect
-    redirect_to signin_form_path and return unless params[:fc_auth_token] && params[:timestamp] && params[:fc_customer_id]
+    redirect_to root_path and return unless params[:fc_auth_token] && params[:timestamp] && params[:fc_customer_id]
     remote_fc_auth_token = params[:fc_auth_token]
     remote_timestamp = params[:timestamp]
     fc_customer_id = params[:fc_customer_id]

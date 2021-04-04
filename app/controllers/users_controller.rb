@@ -8,7 +8,13 @@ class UsersController < ApplicationController
     if @admin
       @user = User.find(params[:id].to_i)
     else
-      redirect_unless_signed_in
+      @user = redirect_unless_signed_in
+      if @user.id == params[:id].to_i
+        @products = @user.recent_orders
+      else
+        flash[:error] = "Unauthorized"
+        redirect_to root_path
+      end
     end
   end
 
