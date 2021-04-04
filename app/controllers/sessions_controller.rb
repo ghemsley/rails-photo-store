@@ -16,8 +16,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    user = User.find_by_id(session[:current_user_id]) if session[:current_user_id]
-    session.delete(:current_user_id) if user
+    session.delete(:current_user_id) if session[:current_user_id]
+    flash[:notice] = "Signed out"
     redirect_to root_path
   end
 
@@ -104,8 +104,63 @@ class SessionsController < ApplicationController
         pp res.value
       end
     else
-      flash[:error] = 'Error: failed to find existing user'
-      redirect_to signin_form_path
+      redirect_to "https://ghemsleyphotos.foxycart.com/checkout?fc_auth_token=#{fc_auth_token(0, timestamp)}&fcsid=#{params[:fcsid]}&fc_customer_id=#{0}&timestamp=#{timestamp}"
+    end
+  end
+
+  def reverse_sso_redirect
+    redirect_to signin_form_path and return unless params[:fc_auth_token] && params[:timestamp] && params[:fc_customer_id]
+    remote_fc_auth_token = params[:fc_auth_token]
+    remote_timestamp = params[:timestamp]
+    fc_customer_id = params[:fc_customer_id]
+    local_timestamp = (Time.current).to_i
+    if remote_timestamp.to_i > local_timestamp && remote_fc_auth_token == fc_auth_token(fc_customer_id, remote_timestamp.to_i)
+      res = helpers.foxycart_api_request
+      case res
+      when Net::HTTPSuccess, Net::HTTPRedirection
+        data = JSON.parse(res.body)
+        res = helpers.foxycart_api_request(url: data['_links']['fx:store']['href'])
+        case res
+        when Net::HTTPSuccess, Net::HTTPRedirection
+          data = JSON.parse(res.body)
+          res = helpers.foxycart_api_request(url: data['_links']['fx:customers']['href'])
+          case res
+          when Net::HTTPSuccess, NET::HTTPRedirection
+            customer_data = JSON.parse(res.body)
+            customer_list = customer_data['_embedded']['fx:customers']
+            customer = customer_list.find do |c|
+              c['id'] == fc_customer_id.to_i && ( c['is_anonymous'] ==  0  ||
+                                                  c['is_anonymous'] == '0' ||
+                                                  c['is_anonymous'] == false )
+            end
+            if customer
+              user = User.find_or_initialize_by(uuid: fc_customer_id)
+              user.email = customer['email']
+              user.password_digest = customer['password_hash']
+              if user.save
+                session[:current_user_id] = user.id
+                flash[:notice] = "Signed in user #{user.email}"
+                redirect_to user_path(user)
+              else
+                flash[:error] = "Failed to create new user account"
+                redirect_to root_path
+              end
+            else
+              flash[:error] = "Failed to find FoxyCart customer matching id #{fc_customer_id}"
+              redirect_to root_path
+            end
+          else
+            pp res.value
+          end
+        else
+          pp res.value
+        end
+      else
+        pp res.value
+      end
+    else
+      flash[:error] = "Failed to verify authorization token"
+      redirect_to root_path
     end
   end
 

@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   get '/admin_signout', to: 'sessions#admin_destroy', as: :admin_signout
 
   get '/sso_redirect', to: 'sessions#sso_redirect', as: :sso_redirect
+  get '/reverse_sso_redirect', to: 'sessions#reverse_sso_redirect', as: :reverse_sso_redirect
 
   post '/foxycart_webhook', to: 'webhooks#foxycart_webhook', as: :foxycart_webhook
 
