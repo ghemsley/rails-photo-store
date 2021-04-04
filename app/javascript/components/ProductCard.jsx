@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { hot } from 'react-hot-loader'
 import Lightbox from 'react-awesome-lightbox'
 import 'react-awesome-lightbox/build/style.css'
 
@@ -177,4 +176,4 @@ const ProductCard = (props) => {
   )
 }
 
-export default hot(module)(ProductCard)
+export default ProductCard
