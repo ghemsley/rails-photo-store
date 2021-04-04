@@ -73,6 +73,12 @@ class Product < ApplicationRecord
     search
   end
 
+  def self.most_popular
+    Product.joins(:quantities).order('amount DESC').group(:product_id).sum(:amount).collect do |product_id, amount|
+      {product: Product.find(product_id), amount: amount}
+    end
+  end
+
   # Instance methods
   def tags_to_a
     tags.downcase.strip.split
