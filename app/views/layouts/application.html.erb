@@ -45,6 +45,11 @@
           </li>
         <% end %>
         <% if signed_in? %>
+          <% if @user %>
+            <li class='pure-menu-item'>
+              <%= link_to 'Account', user_path(@user), class: 'pure-menu-link' %>
+            </li>
+          <% end %>
           <li class='pure-menu-item'>
             <%= link_to 'Sign out', signout_path, class: 'pure-menu-link' %>
           </li>
