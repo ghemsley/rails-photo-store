@@ -14,6 +14,7 @@ const CategorySlider = (props) => {
     slidesToShow: props.slides_to_show,
     slidesToScroll: props.slides_to_scroll,
     autoplay: props.autoplay,
+    autoplaySpeed: 5000,
     lazyLoad: props.lazy,
     adaptiveHeight: false,
     responsive: [

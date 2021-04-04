@@ -6,7 +6,7 @@
     <p class='margin-0 horizontal-padding-1 subheading'><%= @category.description %></p>
   </div>
   <div class='pure-u-1'>
-    <%= react_component('CategorySlider', lazy: 'progressive', description: false, autoplay: true, arrows: true, dots: true, infinite: false, speed: 350, slides_to_show: 3, slides_to_scroll: 1, json: @category.slider_props_json) %>
+    <%= react_component('CategorySlider', lazy: 'progressive', description: false, autoplay: true, arrows: true, dots: true, infinite: false, speed: 500, slides_to_show: 3, slides_to_scroll: 1, json: @category.slider_props_json) %>
     <% if admin_signed_in? %>
       <div class='column center padding-1 margin-vertical-1'>
         <%= link_to 'Edit category', edit_category_path(@category), class: 'pure-button margin-vertical-1' %>
