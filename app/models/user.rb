@@ -8,4 +8,9 @@ class User < ApplicationRecord
   has_one :cart
 
   validates :email, uniqueness: true
+
+  # Instance methods
+  def recent_orders
+    products.uniq
+  end
 end
