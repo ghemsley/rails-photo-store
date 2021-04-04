@@ -54,6 +54,10 @@ class ProductsController < ApplicationController
     end
   end
 
+  def popular
+    @products_with_amounts = Product.most_popular
+  end
+
   private
 
   def create_product(product)
