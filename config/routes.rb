@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :categories do
-    resources :products do
+    resources :products, only: %i[index show new create edit update destroy] do
       resources :dimensions, only: %i[new create edit update destroy] do
         resources :price_modifiers, only: %i[edit update]
       end
@@ -15,7 +15,9 @@ Rails.application.routes.draw do
 
   resources :admins
 
-  resources :quantities, only: %i[index show]
+  get '/products/popular', to: 'products#popular', as: :popular_products
+
+  get '/search', to: 'searches#search', as: :search
 
   get '/signin', to: 'sessions#new', as: :signin_form
   post '/signin', to: 'sessions#create', as: :signin
@@ -26,8 +28,6 @@ Rails.application.routes.draw do
   get '/admin_signout', to: 'sessions#admin_destroy', as: :admin_signout
 
   get '/sso_redirect', to: 'sessions#sso_redirect', as: :sso_redirect
-
-  get '/search', to: 'searches#search', as: :search
 
   post '/foxycart_webhook', to: 'webhooks#foxycart_webhook', as: :foxycart_webhook
 
