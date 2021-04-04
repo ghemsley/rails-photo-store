@@ -236,6 +236,25 @@ p {
 }
 
 /***********************************/
+
+@keyframes wait {
+  from {
+    opacity: 90%;
+  }
+  to {
+    opacity: 90%;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 90%;
+  }
+  to {
+    opacity: 0%;
+  }
+}
+
 body {
   background-color: #ddd;
 }
@@ -701,4 +720,56 @@ body,
 
 .margin-top-2 {
   margin-top: 2em;
+}
+
+.flash {
+  z-index: 1000;
+  animation: 4s ease-out 0s 1 wait, 0.5s ease-out 4s 1 fade;
+  backdrop-filter: blur(2px);
+  opacity: 0%;
+  position: absolute;
+  top: 6.5em;
+  left: 0px;
+  right: 0px;
+  margin: auto;
+  text-align: center;
+  max-width: max-content;
+  color: white;
+  background-color: gray;
+  border-radius: 4px;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  width: fit-content;
+  padding-left: 2em;
+  padding-right: 2em;
+  box-shadow: 6px 12px 20px rgba(39, 44, 49, 0.24),
+    1px 6px 10px rgba(39, 44, 49, 0.12);
+  .flash-close-button {
+    opacity: inherit;
+    backdrop-filter: blur(2px);
+    transition: 150ms all;
+    position: relative;
+    top: -1em;
+    right: -104%;
+    color: black;
+    background: #ddd;
+    border-radius: 2px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 1px;
+    padding-bottom: 2px;
+    text-decoration: none;
+    width: min-content;
+    height: min-content;
+    transform: scale(0.9);
+    &:hover,
+    &:focus {
+      color: white;
+      background-color: darkgray;
+    }
+  }
+  .flash-content {
+    position: relative;
+    margin-top: -1em;
+  }
 }

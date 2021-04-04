@@ -17,7 +17,8 @@
     <% if flash %>
       <% flash.each do |message_name, message_value| %>
         <div class="flash <%= message_name.to_s %>">
-          <p><%= "#{message_name}: #{message_value}" %></p>
+          <div class="flash-close-button" onclick="this.parentElement.remove()">&times;</div>
+          <p class='flash-content margin-0'><%= "#{message_name}: #{message_value}" %></p>
         </div>
       <% end %>
     <% end %>
@@ -108,4 +109,12 @@
       </ul>
     </div>
   </body>
+  <script>
+    var flash = document.querySelector('.flash')
+    if (flash != null) {
+      setTimeout(() => {
+        flash.remove()
+      }, 5000);
+    }
+  </script>
 </html>
