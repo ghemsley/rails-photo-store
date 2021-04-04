@@ -1,0 +1,33 @@
+<%= javascript_pack_tag 'productCard' %>
+<%= stylesheet_pack_tag 'productCard' %>
+<div class='pure-u-1 center'>
+  <div class='background-white padding-1 center center-children margin-vertical-1 margin-bottom-2 shadow fit-content corner-rounded'>
+    <h1 class='margin-0 horizontal-padding-1 uppercase'>Popular products</h1>
+    <p class='margin-0 horizontal-padding-1 subheading'>Products ordered by popularity</p>
+  </div>
+  <div class='display-flex margin-vertical-1'>
+    <% @products_with_amounts.each do |hash| %>
+      <div>
+        <%= react_component('ProductCard',
+        full_size: false, 
+        name: hash[:product].name, 
+        id: hash[:product].id, 
+        description: hash[:product].description, 
+        price: hash[:product].price, 
+        price_unit: hash[:product].price_unit, 
+        url: category_product_url(hash[:product].category, hash[:product]), 
+        image: url_for(hash[:product].image), 
+        thumbnail: url_for(hash[:product].image.variant(resize_to_limit: [480, 720]).processed), 
+        thumbnail_medium: url_for(hash[:product].image.variant(resize_to_limit: [960, 1440]).processed), 
+        thumbnail_large: url_for(hash[:product].image.variant(resize_to_limit: [1440, 2160]).processed),
+        dimensions_json: hash[:product].dimensions_json, 
+        lightbox: false, 
+        class_name: 'corner-rounded padding-1 margin-1 background-white' ) %>
+        <p class='margin-0 margin-top-1'>Purchased <%= hash[:amount] %> time<%= hash[:amount] != 1 ? 's' : nil %></p>
+        <% if admin_signed_in? %>
+          <%= link_to 'Edit', edit_category_product_path(hash[:product].category_id, hash[:product]), class: 'pure-button margin-top-1' %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
