@@ -773,3 +773,17 @@ body,
     margin-top: -1em;
   }
 }
+
+.field_with_errors {
+  border: 1px solid crimson;
+}
+
+.errors-container {
+  text-align: left;
+  width: fit-content;
+  margin: auto;
+  p {
+    width: fit-content;
+    margin: 0px;
+  }
+}
