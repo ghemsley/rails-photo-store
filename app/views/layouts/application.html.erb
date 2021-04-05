@@ -44,22 +44,24 @@
           </li>
           </li>
         <% end %>
-        <% if signed_in? %>
-          <% if @user %>
+        <% if !admin_signed_in? %>
+          <% if signed_in? %>
+            <% if @user %>
+              <li class='pure-menu-item'>
+                <%= link_to 'Account', user_path(@user), class: 'pure-menu-link' %>
+              </li>
+            <% end %>
             <li class='pure-menu-item'>
-              <%= link_to 'Account', user_path(@user), class: 'pure-menu-link' %>
+              <%= link_to 'Sign out', signout_path, class: 'pure-menu-link' %>
+            </li>
+          <% else %>
+            <li class='pure-menu-item'>
+              <%= link_to 'Sign in', signin_form_path, class: 'pure-menu-link' %>
+            </li>
+            <li class='pure-menu-item'>
+              <%= link_to 'Sign up', new_user_path, class: 'pure-menu-link' %>
             </li>
           <% end %>
-          <li class='pure-menu-item'>
-            <%= link_to 'Sign out', signout_path, class: 'pure-menu-link' %>
-          </li>
-        <% else %>
-          <li class='pure-menu-item'>
-            <%= link_to 'Sign in', signin_form_path, class: 'pure-menu-link' %>
-          </li>
-          <li class='pure-menu-item'>
-            <%= link_to 'Sign up', new_user_path, class: 'pure-menu-link' %>
-          </li>
         <% end %>
         <% Category.all.each do |category| %>
           <li class='pure-menu-item'>
