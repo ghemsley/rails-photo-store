@@ -1,5 +1,12 @@
 <div class='pure-u-1 center'>
   <h1>Edit product</h1>
+  <% if @product.errors.any? %>
+    <div class='errors-container'>
+      <% @product.errors.full_messages.each do |message|%>
+        <p><%= message %></p>
+      <%end%>
+    </div>
+  <%end%>
   <div class='form-container background-white'>
     <%= form_with model: @product, url: category_product_path(@product.category, @product), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>
@@ -17,7 +24,7 @@
         <%= f.label  :image, 'Image' %>
         <%= f.file_field :image %>
         <%= f.label  :category_id, 'Category' %>
-        <%= f.collection_select :category_id, Category.order(:id), :id, :name %>
+        <%= f.collection_select :category_id, Category.order(:id), :id, :name, {selected: @product.category_id} %>
       </fieldset>
       <%= f.submit 'Update product' %>
     <% end %>

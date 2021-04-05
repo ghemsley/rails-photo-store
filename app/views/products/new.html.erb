@@ -1,9 +1,16 @@
 <div class='pure-u-1 center'>
   <h1>New product</h1>
+  <% if @product.errors.any? %>
+    <div class='errors-container'>
+      <% @product.errors.full_messages.each do |message|%>
+        <p><%= message %></p>
+      <%end%>
+    </div>
+  <%end%>
   <div class='form-container background-white'>
     <%= form_with model: @product, url: category_products_path(@category_id, @product), class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>
-          <legend>Product</legend>
+        <legend>Product</legend>
         <%= f.label :name, 'Name' %>
         <%= f.text_field :name, placeholder: 'Name'  %>
         <%= f.label :description, 'Description' %>
@@ -17,7 +24,7 @@
         <%= f.label  :image, 'Image' %>
         <%= f.file_field :image %>
         <%= f.label  :category_id, 'Category' %>
-        <%= f.collection_select :category_id, Category.order(:id), :id, :name %>
+        <%= f.collection_select :category_id, Category.order(:id), :id, :name, {selected: @category_id} %>
       </fieldset>
       <%= f.fields_for :dimensions, @product.dimensions.build do |dimension_form| %>
         <fieldset>
