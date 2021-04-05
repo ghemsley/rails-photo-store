@@ -39,18 +39,38 @@ class SessionsController < ApplicationController
 
   def sso_redirect
     redirect_to signin_form_path and return unless params[:fcsid]
+    sso_redirect_foxycart_auth(params)
+  end
+
+  def reverse_sso_redirect
+    redirect_to root_path and return unless params[:fc_auth_token] && params[:timestamp] && params[:fc_customer_id]
+    reverse_sso_redirect_foxycart_auth(params)
+  end
+
+  private
+
+  def fc_auth_token(customer_id, timestamp)
+    foxycart_secret_key = Rails.application.credentials.foxycart_secret_key
+    Digest::SHA1.hexdigest("#{customer_id}|#{timestamp}|#{foxycart_secret_key}")
+  end
+
+  def session_params(*args)
+    params.require(:user).permit(*args)
+  end
+
+  def sso_redirect_foxycart_auth(params)
     timestamp = (Time.current + 1.hours).to_i
     user = get_user_if_signed_in
     if user
-      res = helpers.foxycart_api_request
+      res = foxycart_api_request
       case res
       when Net::HTTPSuccess, Net::HTTPRedirection
         data = JSON.parse(res.body)
-        res = helpers.foxycart_api_request(url: data['_links']['fx:store']['href'])
+        res = foxycart_api_request(url: data['_links']['fx:store']['href'])
         case res
         when Net::HTTPSuccess, Net::HTTPRedirection
           data = JSON.parse(res.body)
-          res = helpers.foxycart_api_request(url: data['_links']['fx:customers']['href'])
+          res = foxycart_api_request(url: data['_links']['fx:customers']['href'])
           case res
           when Net::HTTPSuccess, NET::HTTPRedirection
             customer_data = JSON.parse(res.body)
@@ -67,14 +87,14 @@ class SessionsController < ApplicationController
             else
               puts "Failed to find Foxycart customer for user #{user.id}, creating..."
               request_data = { 'email' => user.email, 'password_hash' => user.read_attribute(:password_digest) }
-              res = helpers.foxycart_api_request(url: data['_links']['fx:customers']['href'],
+              res = foxycart_api_request(url: data['_links']['fx:customers']['href'],
                                                  method: 'post',
                                                  request_data: request_data)
               case res
               when Net::HTTPSuccess, Net::HTTPRedirection
                 puts "Created new FoxyCart customer for user #{user.id}"
                 data = JSON.parse(res.body)
-                res = helpers.foxycart_api_request(url: data['_links']['self']['href'])
+                res = foxycart_api_request(url: data['_links']['self']['href'])
                 case res
                 when Net::HTTPSuccess, Net::HTTPRedirection
                   data = JSON.parse(res.body)
@@ -108,22 +128,21 @@ class SessionsController < ApplicationController
     end
   end
 
-  def reverse_sso_redirect
-    redirect_to root_path and return unless params[:fc_auth_token] && params[:timestamp] && params[:fc_customer_id]
+  def reverse_sso_redirect_foxycart_auth(params)
     remote_fc_auth_token = params[:fc_auth_token]
     remote_timestamp = params[:timestamp]
     fc_customer_id = params[:fc_customer_id]
     local_timestamp = (Time.current).to_i
     if remote_timestamp.to_i > local_timestamp && remote_fc_auth_token == fc_auth_token(fc_customer_id, remote_timestamp.to_i)
-      res = helpers.foxycart_api_request
+      res = foxycart_api_request
       case res
       when Net::HTTPSuccess, Net::HTTPRedirection
         data = JSON.parse(res.body)
-        res = helpers.foxycart_api_request(url: data['_links']['fx:store']['href'])
+        res = foxycart_api_request(url: data['_links']['fx:store']['href'])
         case res
         when Net::HTTPSuccess, Net::HTTPRedirection
           data = JSON.parse(res.body)
-          res = helpers.foxycart_api_request(url: data['_links']['fx:customers']['href'])
+          res = foxycart_api_request(url: data['_links']['fx:customers']['href'])
           case res
           when Net::HTTPSuccess, NET::HTTPRedirection
             customer_data = JSON.parse(res.body)
@@ -162,16 +181,5 @@ class SessionsController < ApplicationController
       flash[:error] = "Failed to verify authorization token"
       redirect_to root_path
     end
-  end
-
-  private
-
-  def fc_auth_token(customer_id, timestamp)
-    foxycart_secret_key = Rails.application.credentials.foxycart_secret_key
-    Digest::SHA1.hexdigest("#{customer_id}|#{timestamp}|#{foxycart_secret_key}")
-  end
-
-  def session_params(*args)
-    params.require(:user).permit(*args)
   end
 end
