@@ -76,7 +76,9 @@ class Product < ApplicationRecord
   def self.most_popular
     Product.joins(:quantities).order('amount DESC').group(:product_id).sum(:amount).collect do |product_id, amount|
       {product: Product.find(product_id), amount: amount}
-    end
+    end.sort do |a, b|
+      a[:amount] <=> b[:amount]
+    end.reverse
   end
 
   # Instance methods
