@@ -23,7 +23,9 @@ class ProductsController < ApplicationController
     if create_product(product)
       redirect_to category_product_path(product.category, product)
     else
-      redirect_to new_category_product_path(Category.find(product.category_id), product)
+      @category_id = params[:product][:category_id]
+      @product = product
+      render :new
     end
   end
 
@@ -38,7 +40,9 @@ class ProductsController < ApplicationController
     if update_product(product)
       redirect_to category_product_path(product.category, product)
     else
-      redirect_to edit_category_product_path(product.category, product)
+      @category_id = params[:product][:category_id]
+      @product = product
+      render :edit
     end
   end
 
@@ -69,7 +73,6 @@ class ProductsController < ApplicationController
                         price modifiers #{product.price_modifiers.collect(&:id)}"
       true
     else
-      flash[:error] = "Failed to create product, errors: #{product.errors.full_messages}"
       false
     end
   end
@@ -79,7 +82,6 @@ class ProductsController < ApplicationController
       flash[:notice] = "Updated product #{product.name} with ID #{product.id}"
       true
     else
-      flash[:error] = 'Failed to save product info'
       false
     end
   end
