@@ -7,9 +7,10 @@ class UsersController < ApplicationController
   def show
     if @admin
       @user = User.find(params[:id].to_i)
+      @products = @user.recent_orders
     else
       @user = redirect_unless_signed_in
-      if @user.id == params[:id].to_i
+      if @user&.id == params[:id].to_i
         @products = @user.recent_orders
       else
         flash[:error] = "Unauthorized"
