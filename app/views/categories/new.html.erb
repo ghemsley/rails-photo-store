@@ -1,5 +1,10 @@
 <div class='pure-u-1 center'>
   <h1>New category</h1>
+  <% if @category.errors.any? %>
+    <% @category.errors.full_messages.each do |message|%>
+      <h2><%= message %></h2>
+    <%end%>
+  <%end%>
   <div class='form-container background-white'>
     <%= form_with model: @category, class: 'pure-form pure-form-stacked' do |f| %>
       <%= f.label :name, 'Name' %>
