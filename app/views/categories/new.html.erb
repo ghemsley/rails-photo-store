@@ -1,9 +1,11 @@
 <div class='pure-u-1 center'>
   <h1>New category</h1>
   <% if @category.errors.any? %>
-    <% @category.errors.full_messages.each do |message|%>
-      <h2><%= message %></h2>
-    <%end%>
+    <div class='errors-container'>
+      <% @category.errors.full_messages.each do |message|%>
+        <p><%= message %></p>
+      <%end%>
+    </div>
   <%end%>
   <div class='form-container background-white'>
     <%= form_with model: @category, class: 'pure-form pure-form-stacked' do |f| %>

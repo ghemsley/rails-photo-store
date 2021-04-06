@@ -1,5 +1,12 @@
 <div class='pure-u-1 center'>
   <h1>Edit price modifier <%= @price_modifier.id %> for dimension <%= @dimension_id %> of product <%= @product_id %></h1>
+   <% if @price_modifier.errors.any? %>
+    <div class='errors-container'>
+      <% @price_modifier.errors.full_messages.each do |message|%>
+        <p><%= message %></p>
+      <%end%>
+    </div>
+  <%end%>
   <div class='form-container background-white'>
     <%= form_with model: @price_modifier, url: category_product_dimension_price_modifier_path(@category_id, @product_id, @dimension_id, @price_modifier), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>

@@ -1,5 +1,12 @@
 <div class='pure-u-1 center'>
   <h1>New dimension for product <%= @product_id %></h1>
+   <% if @dimension.errors.any? %>
+    <div class='errors-container'>
+      <% @dimension.errors.full_messages.each do |message|%>
+        <p><%= message %></p>
+      <%end%>
+    </div>
+  <%end%>
   <div class='form-container background-white'>
     <%= form_with model: @dimension, url: category_product_dimensions_path(@category_id, @product_id), class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>

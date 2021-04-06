@@ -1,5 +1,12 @@
 <div class='pure-u-1 center'>
   <h1>Sign up</h1>
+  <% if @admin.errors.any? %>
+    <div class='errors-container'>
+      <% @admin.errors.full_messages.each do |message|%>
+        <p><%= message %></p>
+      <%end%>
+    </div>
+  <%end%>
   <div class='form-container background-white'>
     <%= form_with model: @admin, class: 'pure-form pure-form-stacked' do |f| %>
       <%= f.label :username, 'Username' %>
