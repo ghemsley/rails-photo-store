@@ -34,7 +34,7 @@ class AdminsController < ApplicationController
 
   def update
     admin = Admin.find(params[:id])
-    if admin.authenticate(params[:admin][:password])
+    if admin&.authenticate(params[:admin][:password])
       admin.password = params[:admin][:new_password] if params[:admin][:new_password]
       params[:admin].each do |param_name, _param_value|
         admin.update(admin_params(param_name)) unless %w[password new_password].include?(param_name.to_s)

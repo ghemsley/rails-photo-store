@@ -52,6 +52,8 @@ class ApplicationController < ActionController::Base
         req = Net::HTTP::Get.new(uri)
       when 'post'
         req = Net::HTTP::Post.new(uri)
+      when 'patch'
+        req = Net::HTTP::Patch.new(uri)
       else
         pp "Warning: invalid method for API request, defaulting to 'get'"
         req = Net::HTTP::Get.new(uri)
@@ -63,7 +65,7 @@ class ApplicationController < ActionController::Base
                              else
                                "Bearer #{ENV['NEW_FOXYCART_ACCESS_TOKEN'] || Rails.application.credentials.foxycart_access_token }"
                              end
-      if method&.downcase == 'post'
+      if method&.downcase == 'post' || 'patch'
         if request_data.respond_to?('deep_stringify_keys')
           req.set_form_data(request_data.deep_stringify_keys)
         elsif request_data
