@@ -40,7 +40,7 @@ const CategorySlider = (props) => {
       }
     ]
   }
-  let json = JSON.parse(props.json)
+  const json = JSON.parse(props.json)
   return (
     <Slider {...settings}>
       {json.map((product, i) => {
@@ -56,7 +56,6 @@ const CategorySlider = (props) => {
             url={product.url}
             image={product.image}
             thumbnail={product.thumbnail}
-            thumbnail_medium={product.thumbnail_medium}
             thumbnail_large={product.thumbnail_large}
             dimensions_json={product.dimensions_json}
             lightbox={product.lightbox}

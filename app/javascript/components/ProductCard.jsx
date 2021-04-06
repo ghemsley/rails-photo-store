@@ -1,45 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Lightbox from 'react-awesome-lightbox'
 import 'react-awesome-lightbox/build/style.css'
-
-const empty = (object) => {
-  if (
-    object != undefined &&
-    object != null &&
-    object != '' &&
-    object != {} &&
-    object != []
-  ) {
-    return false
-  } else {
-    return true
-  }
-}
-
-const getClientDimensions = () => {
-  const width = window.innerWidth
-  const height = window.innerHeight
-  return { width, height }
-}
 
 const disable = (event) => {
   event.preventDefault()
 }
 
 const ProductCard = (props) => {
-  if (props.dimensions_json) {
-    var json = JSON.parse(props.dimensions_json)
-  }
-  const [windowDimensions, setWindowDimensions] = useState(getClientDimensions)
-  useEffect(() => {
-    const updateDimensions = () => {
-      setWindowDimensions(getClientDimensions)
-    }
-    window.addEventListener('resize', updateDimensions)
-    return () => {
-      window.removeEventListener('resize', updateDimensions)
-    }
-  })
+  const json = JSON.parse(props.dimensions_json)
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState(json[0].distances_string)
   const [loaded, setLoaded] = useState(false)
@@ -67,7 +35,7 @@ const ProductCard = (props) => {
         <img
           src={
             urlRegex.test(window.location.href)
-              ? props.thumbnail_medium
+              ? props.thumbnail_large
               : props.thumbnail
           }
           className={`product-image pure-img`}
@@ -109,10 +77,6 @@ const ProductCard = (props) => {
                 id='size-select-dropdown'
                 value={selected}
                 onChange={(event) => {
-                  console.log(json)
-                  console.log(json[0].distances_string)
-                  console.log(event.currentTarget.value)
-                  // event.target.value.match(/\+\d+.?\d*/m)[0]
                   setSelected(event.currentTarget.value)
                   json.forEach((dimension, i) => {
                     if (
