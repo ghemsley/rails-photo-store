@@ -22,10 +22,10 @@ class WebhooksController < ApplicationController
       end
       if quantity.save
         pp "Saved new quantity #{quantity.id} for user #{user.id} and product #{product.id} with amount #{quantity.amount}"
-        render status: :ok, json: @controller.to_json
       else
         pp quantity.errors.full_messages
       end
     end
+    render status: :ok
   end
 end

@@ -36,17 +36,26 @@ class UsersController < ApplicationController
     admin = get_admin_if_signed_in
     if admin
       user = User.find(params[:id].to_i)
-      params[:user].each do |param_name, _param_value|
-        user.update(user_params(param_name))
+      if user.update(params[:user])
+        update_user_with_foxycart(user)
+      else
+        flash[:error] = "Failed to update local user"
+        redirect_to edit_user_path(user)
       end
-      flash[:notice] = "Updated user #{user.id}"
-      redirect_to user_path(user)
-    elsif session[:current_user_id] == params[:user][:id]
+    elsif session[:current_user_id].to_i == params[:id].to_i
       user = User.find(params[:id].to_i)
-      user.update(user_params(params[:user]))
-      redirect_to user_path(user)
+      if user&.authenticate(params[:user][:password])
+        user.password = params[:user][:new_password] if params[:user][:new_password]
+        params[:user].each do |param_name, _param_value|
+          user.update(user_params(param_name)) unless %w[password new_password].include?(param_name.to_s)
+        end
+        update_user_with_foxycart(user)
+      else
+        flash[:error] = "Failed to authenticate local user"
+        redirect_to edit_user_path(session[:current_user_id])
+      end
     else
-      flash[:error] = 'Failed to update user'
+      flash[:error] = 'Failed to update local user'
       redirect_to edit_user_path(session[:current_user_id])
     end
   end
@@ -150,6 +159,54 @@ class UsersController < ApplicationController
     else
       flash[:error] = 'Error: failed to create new user'
       redirect_to root_path
+    end
+  end
+
+  def update_user_with_foxycart(user)
+    res = foxycart_api_request
+    case res
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      data = JSON.parse(res.body)
+      res = foxycart_api_request(url: data['_links']['fx:store']['href'])
+      case res
+      when Net::HTTPSuccess, Net::HTTPRedirection
+        data = JSON.parse(res.body)
+        res = foxycart_api_request(url: data['_links']['fx:customers']['href'])
+        case res
+        when Net::HTTPSuccess, NET::HTTPRedirection
+          customer_data = JSON.parse(res.body)
+          customer_list = customer_data['_embedded']['fx:customers']
+          customer = customer_list.find do |c|
+            c['id'].to_i == user.uuid.to_i && (c['is_anonymous'] ==  0  ||
+                                               c['is_anonymous'] == '0' ||
+                                               c['is_anonymous'] == false)
+          end
+          if customer
+            puts "Found customer #{customer['id']} matching user #{user.id}"
+            request_data = { 'email' => user.email, 'password_hash' => user.read_attribute(:password_digest) }
+            res = foxycart_api_request(url: "https://api.foxycart.com/customers/#{customer['id']}",
+                                       method: 'patch',
+                                       request_data: request_data)
+            case res
+            when Net::HTTPSuccess, Net::HTTPRedirection
+              puts "Updated FoxyCart customer for user #{user.id}"
+              flash[:notice] = "Updated user with id #{user.id} and FoxyCart customer with id #{user.uuid}"
+              redirect_to user_path(user)
+            else
+              pp res.value
+            end
+          else
+            flash[:error] = "Failed to find FoxyCart customer for uuid #{user.uuid}"
+            redirect_to user_path(user)
+          end
+        else
+          pp res.value
+        end
+      else
+        pp res.value
+      end
+    else
+      pp res.value
     end
   end
 end
