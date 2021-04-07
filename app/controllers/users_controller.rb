@@ -154,11 +154,11 @@ class UsersController < ApplicationController
         pp res.value
       end
     elsif user
-      flash[:error] = 'User has aleady been created'
-      redirect_to user_path(user)
+      flash[:error] = 'User with this info has aleady been created'
+      redirect_to new_user_path
     else
       flash[:error] = 'Error: failed to create new user'
-      redirect_to root_path
+      redirect_to new_user_path
     end
   end
 

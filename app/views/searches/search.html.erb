@@ -13,6 +13,7 @@
   </div>
   <div class='display-flex margin-vertical-1 search-results-container center'>
     <% @products.each do |product| %>
+      <div>
         <%= react_component('ProductCard', 
         full_size: false, name: product.name, 
         id: product.id, 
@@ -29,6 +30,7 @@
         <% if admin_signed_in? %>
           <%= link_to 'Edit', edit_category_product_path(product.category, product), class: 'pure-button center margin-vertical-1' %>
         <% end %>
+      </div>
     <% end %>
   </div>
   <div class='pure-u-1 center column fit-content background-white padding-1 shadow corner-rounded margin-vertical-1'>
