@@ -14,8 +14,7 @@ class DimensionsController < ApplicationController
       flash[:notice] = "Created dimension #{dimension.id}"
       redirect_to category_product_path(dimension.product.category, dimension.product)
     else
-      flash[:error] = 'Failed to create dimension'
-      redirect_to new_category_product_dimension_path(params[:category_id], params[:product_id])
+      render :new
     end
   end
 
@@ -28,9 +27,12 @@ class DimensionsController < ApplicationController
 
   def update
     dimension = Dimension.find(params[:id])
-    dimension.update(dimension_params(:length, :width, :height, :weight, :distance_unit, :weight_unit))
-    dimension.price_modifier.update(price_modifier_params(:number, :unit))
-    redirect_to category_product_path(dimension.product.category, dimension.product)
+    if dimension.update(dimension_params(:length, :width, :height, :weight, :distance_unit, :weight_unit))
+      flash[:notice] = "Updated dimension #{dimension.id}"
+      redirect_to category_product_path(dimension.product.category, dimension.product)
+    else 
+      render :edit
+    end
   end
 
   def destroy
