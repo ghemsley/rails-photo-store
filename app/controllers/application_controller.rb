@@ -120,4 +120,37 @@ class ApplicationController < ActionController::Base
       pp res.value
     end
   end
+
+  def get_foxycart_data
+    res = foxycart_api_request
+    case res
+    when Net::HTTPSuccess, Net::HTTPRedirection
+      data = JSON.parse(res.body)
+      res = foxycart_api_request(url: data['_links']['fx:store']['href'])
+      case res
+      when Net::HTTPSuccess, Net::HTTPRedirection
+        store_data = JSON.parse(res.body)
+        res = foxycart_api_request(url: store_data['_links']['fx:customers']['href'])
+        case res
+        when Net::HTTPSuccess, NET::HTTPRedirection
+          customer_data = JSON.parse(res.body)
+          customer_list = customer_data['_embedded']['fx:customers']
+          return { customer_list: customer_list, customer_data: customer_data, store_data: store_data, data: data } if customer_list
+          nil
+        else
+          logger.error "Failed to get FoxyCart customer list"
+          logger.error res.value
+          return nil
+        end
+      else
+        logger.error "Failed to get FoxyCart store info"
+        logger.error res.value
+        return nil
+      end
+    else
+      logger.error "Failed to get make inital FoxyCart API request"
+      logger.error res.value
+      return nil
+    end
+  end
 end
