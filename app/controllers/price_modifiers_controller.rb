@@ -9,8 +9,12 @@ class PriceModifiersController < ApplicationController
 
   def update
     price_modifier = PriceModifier.find(params[:id])
-    price_modifier.update(price_modifier_params(:number, :unit))
-    redirect_to category_product_path(price_modifier.dimension.product.category, price_modifier.dimension.product)
+    if price_modifier.update(price_modifier_params(:number, :unit))
+      flash[:notice] = "Updated price modifier #{price_modifier.id}"
+      redirect_to category_product_path(price_modifier.dimension.product.category, price_modifier.dimension.product)
+    else
+      render :edit
+    end
   end
 
   private
