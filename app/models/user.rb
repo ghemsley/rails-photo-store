@@ -11,6 +11,6 @@ class User < ApplicationRecord
 
   # Instance methods
   def recent_orders
-    products.uniq
+    products.joins(:quantities).order('quantities.updated_at DESC').uniq
   end
 end
