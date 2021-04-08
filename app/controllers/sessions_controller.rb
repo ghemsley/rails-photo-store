@@ -54,74 +54,52 @@ class SessionsController < ApplicationController
     Digest::SHA1.hexdigest("#{customer_id}|#{timestamp}|#{foxycart_secret_key}")
   end
 
-  def session_params(*args)
-    params.require(:user).permit(*args)
-  end
-
   def sso_redirect_foxycart_auth(params)
     timestamp = (Time.current + 1.hours).to_i
     user = get_user_if_signed_in
     if user
-      res = foxycart_api_request
-      case res
-      when Net::HTTPSuccess, Net::HTTPRedirection
-        data = JSON.parse(res.body)
-        res = foxycart_api_request(url: data['_links']['fx:store']['href'])
-        case res
-        when Net::HTTPSuccess, Net::HTTPRedirection
-          data = JSON.parse(res.body)
-          res = foxycart_api_request(url: data['_links']['fx:customers']['href'])
-          case res
-          when Net::HTTPSuccess, NET::HTTPRedirection
-            customer_data = JSON.parse(res.body)
-            customer_list = customer_data['_embedded']['fx:customers']
-            customer = customer_list.find do |c|
-              c['id'] == user&.uuid.to_i && ( c['is_anonymous'] ==  0  ||
+      foxycart_data = get_foxycart_data
+      customer_list = foxycart_data[:customer_list]
+      customer = customer_list.find do |c|
+        c['id']&.to_i == user&.uuid.to_i && ( c['is_anonymous'] ==  0  ||
                                               c['is_anonymous'] == '0' ||
                                               c['is_anonymous'] == false )
-            end
-            if customer
-              customer_id = customer['id']
-              puts "Found customer #{customer['id']} matching user #{user.id} for email #{user.email}"
+      end
+      if customer
+        customer_id = customer['id']
+        logger.info "Found customer #{customer_id} matching user #{user.id}"
+        redirect_to "https://ghemsleyphotos.foxycart.com/checkout?fc_auth_token=#{fc_auth_token(customer_id, timestamp)}&fcsid=#{params[:fcsid]}&fc_customer_id=#{customer_id}&timestamp=#{timestamp}"
+      else
+        logger.info "Failed to find Foxycart customer for user #{user.id}, creating..."
+        request_data = { 'email' => user.email, 'password_hash' => user.read_attribute(:password_digest) }
+        res = foxycart_api_request( url: foxycart_data[:store_data]['_links']['fx:customers']['href'],
+                                    method: 'post',
+                                    request_data: request_data )
+        case res
+        when Net::HTTPSuccess, Net::HTTPRedirection
+          logger.info "Created new FoxyCart customer for user #{user.id}"
+          data = JSON.parse(res.body)
+          res = foxycart_api_request(url: data['_links']['self']['href'])
+          case res
+          when Net::HTTPSuccess, Net::HTTPRedirection
+            data = JSON.parse(res.body)
+            if user.update(uuid: data['id'])
+              logger.info "Updated user #{user.id} with customer info from FoxyCart"
+              customer_id = data['id']
               redirect_to "https://ghemsleyphotos.foxycart.com/checkout?fc_auth_token=#{fc_auth_token(customer_id, timestamp)}&fcsid=#{params[:fcsid]}&fc_customer_id=#{customer_id}&timestamp=#{timestamp}"
             else
-              puts "Failed to find Foxycart customer for user #{user.id}, creating..."
-              request_data = { 'email' => user.email, 'password_hash' => user.read_attribute(:password_digest) }
-              res = foxycart_api_request(url: data['_links']['fx:customers']['href'],
-                                                 method: 'post',
-                                                 request_data: request_data)
-              case res
-              when Net::HTTPSuccess, Net::HTTPRedirection
-                puts "Created new FoxyCart customer for user #{user.id}"
-                data = JSON.parse(res.body)
-                res = foxycart_api_request(url: data['_links']['self']['href'])
-                case res
-                when Net::HTTPSuccess, Net::HTTPRedirection
-                  data = JSON.parse(res.body)
-                  if user.update(uuid: data['id'])
-                    puts "Updated user #{user.id} with customer info from FoxyCart"
-                    customer_id = data['id']
-                    redirect_to "https://ghemsleyphotos.foxycart.com/checkout?fc_auth_token=#{fc_auth_token(customer_id, timestamp)}&fcsid=#{params[:fcsid]}&fc_customer_id=#{customer_id}&timestamp=#{timestamp}"
-                  else
-                    puts "Error: failed to save user #{user.id}"
-                    flash[:error] = "Failed to save user #{user.id}"
-                    redirect_to signin_form_path
-                  end
-                else
-                  pp res.value
-                end
-              else
-                pp res.value
-              end
+              logger.error "Failed to save user #{user.id}"
+              flash[:error] = "Failed to save user #{user.id}"
+              redirect_to root_path
             end
           else
-            pp res.value
+            logger.error "#{res.value}: Failed to get customer info from FoxyCart"
+            redirect_to root_path
           end
         else
-          pp res.value
+          logger.error "#{res.value}: Failed to create new customer for user #{user.id}"
+          redirect_to root_path
         end
-      else
-        pp res.value
       end
     else
       redirect_to "https://ghemsleyphotos.foxycart.com/checkout?fc_auth_token=#{fc_auth_token(0, timestamp)}&fcsid=#{params[:fcsid]}&fc_customer_id=#{0}&timestamp=#{timestamp}"
@@ -134,48 +112,27 @@ class SessionsController < ApplicationController
     fc_customer_id = params[:fc_customer_id]
     local_timestamp = (Time.current).to_i
     if remote_timestamp.to_i > local_timestamp && remote_fc_auth_token == fc_auth_token(fc_customer_id, remote_timestamp.to_i)
-      res = foxycart_api_request
-      case res
-      when Net::HTTPSuccess, Net::HTTPRedirection
-        data = JSON.parse(res.body)
-        res = foxycart_api_request(url: data['_links']['fx:store']['href'])
-        case res
-        when Net::HTTPSuccess, Net::HTTPRedirection
-          data = JSON.parse(res.body)
-          res = foxycart_api_request(url: data['_links']['fx:customers']['href'])
-          case res
-          when Net::HTTPSuccess, NET::HTTPRedirection
-            customer_data = JSON.parse(res.body)
-            customer_list = customer_data['_embedded']['fx:customers']
-            customer = customer_list.find do |c|
-              c['id'] == fc_customer_id.to_i && ( c['is_anonymous'] ==  0  ||
-                                                  c['is_anonymous'] == '0' ||
-                                                  c['is_anonymous'] == false )
-            end
-            if customer
-              user = User.find_or_initialize_by(uuid: fc_customer_id)
-              user.email = customer['email']
-              user.password_digest = customer['password_hash']
-              if user.save
-                session[:current_user_id] = user.id
-                flash[:notice] = "Signed in user #{user.email}"
-                redirect_to user_path(user)
-              else
-                flash[:error] = "Failed to create new user account"
-                redirect_to root_path
-              end
-            else
-              flash[:error] = "Failed to find FoxyCart customer matching id #{fc_customer_id}"
-              redirect_to root_path
-            end
-          else
-            pp res.value
-          end
+      customer_list = get_foxycart_data[:customer_list]
+      customer = customer_list.find do |c|
+        c['id'] == fc_customer_id.to_i && ( c['is_anonymous'] ==  0  ||
+                                            c['is_anonymous'] == '0' ||
+                                            c['is_anonymous'] == false )
+      end
+      if customer
+        user = User.find_or_initialize_by(uuid: fc_customer_id)
+        user.email = customer['email']
+        user.password_digest = customer['password_hash']
+        if user.save
+          session[:current_user_id] = user.id
+          flash[:notice] = "Signed in user #{user.email}"
+          redirect_to user_path(user)
         else
-          pp res.value
+          flash[:error] = "Failed to create new user account"
+          redirect_to root_path
         end
       else
-        pp res.value
+        flash[:error] = "Failed to find FoxyCart customer matching id #{fc_customer_id}"
+        redirect_to root_path
       end
     else
       flash[:error] = "Failed to verify authorization token"
