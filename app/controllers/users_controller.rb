@@ -36,7 +36,7 @@ class UsersController < ApplicationController
     admin = get_admin_if_signed_in
     if admin
       user = User.find(params[:id].to_i)
-      if user.update(params[:user])
+      if user.update(email: params[:user][:email], password: params[:user][:password])
         update_user_with_foxycart(user)
       else
         render :edit
@@ -95,8 +95,12 @@ class UsersController < ApplicationController
                          password_digest: customer['password_hash'])
             flash[:notice] = "Found existing customer with local user id #{user.id}"
           else
+            user.errors.full_messages.each do |message|
+              logger.error message
+            end
             flash[:error] = "Found existing customer but failed to update attributes for user #{user.id}"
           end
+          session[:current_user_id] = user.id
           redirect_to user_path(user)
         elsif user.update(password: params[:user][:password],
                           password_confirmation: params[:user][:password_confirmation])
