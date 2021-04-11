@@ -1,0 +1,14 @@
+<legend>Product</legend>
+<%= form.label :name, 'Name' %>
+<%= form.text_field :name, placeholder: 'Name'  %>
+<%= form.label :description, 'Description' %>
+<%= form.text_area :description, cols: 43, rows: 5, placeholder: 'Description'  %>
+<%= form.label :tags, 'Tags' %>
+<%= form.text_area :tags, cols: 43, rows: 5, placeholder: 'Space-separated list of tags'  %>
+<%= form.label :price, 'Price' %>
+<%= form.number_field :price, min: 0.00, step: 0.01, placeholder: 'Price' %>
+<%= form.label :price_unit, 'Price unit' %>
+<%= form.text_field :price_unit, placeholder: 'Price unit'  %>
+<%= form.label  :image, 'Image' %>
+<%= form.file_field :image %>
+<%= form.label  :category_id, 'Category' %>

@@ -1,52 +1,18 @@
 <div class='pure-u-1 center'>
   <h1>New product</h1>
-  <% if @product.errors.any? %>
-    <div class='errors-container'>
-      <% @product.errors.full_messages.each do |message|%>
-        <p><%= message %></p>
-      <%end%>
-    </div>
-  <%end%>
+  <%= render partial: 'shared/errors', locals: {model: @product} %>
   <div class='form-container background-white'>
     <%= form_with model: @product, url: category_products_path(@category_id, @product), class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>
-        <legend>Product</legend>
-        <%= f.label :name, 'Name' %>
-        <%= f.text_field :name, placeholder: 'Name'  %>
-        <%= f.label :description, 'Description' %>
-        <%= f.text_area :description, cols: 43, rows: 5, placeholder: 'Description'  %>
-        <%= f.label :tags, 'Tags' %>
-        <%= f.text_area :tags, cols: 43, rows: 5, placeholder: 'Space-separated list of tags'  %>
-        <%= f.label :price, 'Price' %>
-        <%= f.number_field :price, min: 0.00, step: 0.01, placeholder: 'Price' %>
-        <%= f.label :price_unit, 'Price unit' %>
-        <%= f.text_field :price_unit, placeholder: 'Price unit'  %>
-        <%= f.label  :image, 'Image' %>
-        <%= f.file_field :image %>
-        <%= f.label  :category_id, 'Category' %>
+        <%= render partial: 'product_fields', locals: {form: f} %>
         <%= f.collection_select :category_id, Category.order(:id), :id, :name, {selected: @category_id} %>
       </fieldset>
       <%= f.fields_for :dimensions, @product.dimensions.build do |dimension_form| %>
         <fieldset>
           <legend>Dimension <%= dimension_form.index + 1 %></legend>
-          <fieldset>
-            <legend>Distance measurements</legend>
-            <%= dimension_form.number_field :length, min: 0.00, step: 0.01, placeholder: 'Length' %>
-            <%= dimension_form.number_field :width, min: 0.00, step: 0.01, placeholder: 'Width' %>
-            <%= dimension_form.number_field :height, min: 0.00, step: 0.01, placeholder: 'Height' %>
-            <%= dimension_form.text_field :distance_unit, placeholder: 'Distance unit' %>
-          </fieldset>
-          <fieldset>
-            <legend>Weight measurements</legend>
-            <%= dimension_form.number_field :weight, min: 0.00, step: 0.01, placeholder: 'Weight' %>
-            <%= dimension_form.text_field :weight_unit, placeholder: 'Weight unit' %>
-          </fieldset>
+          <%= render partial: 'dimensions/dimension_fields', locals: {form: dimension_form} %>
           <%= dimension_form.fields_for :price_modifier, PriceModifier.new do |price_modifier_form| %>
-            <fieldset>
-              <legend>Price modifier for these dimensions</legend>
-              <%= price_modifier_form.number_field :number, min: 0.00, step: 0.01, placeholder: 'Price' %>
-              <%= price_modifier_form.text_field :unit, placeholder: 'Unit' %>
-            </fieldset>
+            <%= render partial: 'price_modifiers/price_modifier_fields', locals: {form: price_modifier_form} %>
           <% end %>
         </fieldset>
       <% end %>
