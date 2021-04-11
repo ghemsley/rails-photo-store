@@ -36,31 +36,7 @@
   <div class='pure-u-1 center column fit-content background-white padding-1 shadow corner-rounded margin-vertical-1'>
     <%= form_with url: "/search", method: :get, class: 'pure-form pure-form-aligned center margin-auto' do |form| %>
       <%= form.hidden_field :query, value: @query %>
-      <fieldset class='center margin-auto'>
-        <%= form.text_field :"filters[name_contains]", placeholder: 'Name contains:' %>
-        <%= form.text_field :"filters[description_contains]", placeholder: 'Description contains:' %>
-        <%= form.text_field :"filters[tags_contains]", placeholder: 'Tags contain:' %>
-      </fieldset>
-      <fieldset class='center margin-auto'>
-        <%= form.number_field :"filters[price_over]", min: 0, placeholder: 'Price over:' %>
-        <%= form.number_field :"filters[price_under]", min: 0, placeholder: 'Price under:' %>
-      </fieldset>
-      <fieldset class='center margin-auto'>
-        <%= form.number_field :"filters[length_over]", min: 0, placeholder: 'Length over:' %>
-        <%= form.number_field :"filters[length_under]", min: 0, placeholder: 'Length under:' %>
-      </fieldset>
-      <fieldset class='center margin-auto'>
-        <%= form.number_field :"filters[width_over]", min: 0, placeholder: 'Width over:' %>
-        <%= form.number_field :"filters[width_under]", min: 0, placeholder: 'Width under:' %>
-      </fieldset>
-      <fieldset class='center margin-auto'>
-        <%= form.number_field :"filters[height_over]", min: 0, placeholder: 'Height over:' %>
-        <%= form.number_field :"filters[height_under]", min: 0, placeholder: 'Height under:' %>
-      </fieldset>
-      <fieldset class='center margin-auto'>
-        <%= form.number_field :"filters[weight_over]", min: 0, placeholder: 'Weight over:' %>
-        <%= form.number_field :"filters[weight_under]", min: 0, placeholder: 'Weight under:' %>
-      </fieldset>
+      <%= render partial: 'search_form_fields', locals: {form: form} %>
       <%= form.submit 'Filter search' %>
     <% end %>
   </div>
