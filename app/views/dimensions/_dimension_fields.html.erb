@@ -1,0 +1,18 @@
+<fieldset>
+  <legend>Distance measurements</legend>
+  <%= form.label :length, 'Length' %>
+  <%= form.number_field :length, min: 0.00, step: 0.01, placeholder: 'Length' %>
+  <%= form.label :width, 'Width' %>
+  <%= form.number_field :width, min: 0.00, step: 0.01, placeholder: 'Width'  %>
+  <%= form.label :height, 'Height' %>
+  <%= form.number_field :height, min: 0.00, step: 0.01, placeholder: 'Height' %>
+  <%= form.label :distance_unit, 'Distance unit' %>
+  <%= form.text_field :distance_unit, placeholder: 'Distance unit'  %>
+</fieldset>
+<fieldset>
+  <legend>Weight measurements</legend>
+  <%= form.label  :weight, 'Weight' %>
+  <%= form.number_field :weight, min: 0.00, step: 0.01, placeholder: 'Weight'  %>
+  <%= form.label  :weight_unit, 'Weight unit' %>
+  <%= form.text_field :weight_unit, placeholder: 'Weight unit'  %>
+</fieldset>

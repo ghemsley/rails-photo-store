@@ -1,32 +1,9 @@
 <div class='pure-u-1 center'>
   <h1>Edit dimension with id <%= @dimension.id %> for product <%= @product_id %></h1>
-  <% if @dimension.errors.any? %>
-    <div class='errors-container'>
-      <% @dimension.errors.full_messages.each do |message|%>
-        <p><%= message %></p>
-      <%end%>
-    </div>
-  <%end%>
+  <%= render partial: 'shared/errors', locals: {model: @dimension} %>
   <div class='form-container background-white'>
     <%= form_with model: @dimension, url: category_product_dimension_path(@category_id, @product_id, @dimension), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
-      <fieldset>
-        <legend>Distance measurements</legend>
-        <%= f.label :length, 'Length' %>
-        <%= f.number_field :length, min: 0.00, step: 0.01, placeholder: 'Length' %>
-        <%= f.label :width, 'Width' %>
-        <%= f.number_field :width, min: 0.00, step: 0.01, placeholder: 'Width'  %>
-        <%= f.label :height, 'Height' %>
-        <%= f.number_field :height, min: 0.00, step: 0.01, placeholder: 'Height' %>
-        <%= f.label :distance_unit, 'Distance unit' %>
-        <%= f.text_field :distance_unit, placeholder: 'Distance unit'  %>
-      </fieldset>
-      <fieldset>
-        <legend>Weight measurements</legend>
-        <%= f.label  :weight, 'Weight' %>
-        <%= f.number_field :weight, min: 0.00, step: 0.01, placeholder: 'Weight'  %>
-        <%= f.label  :weight_unit, 'Weight unit' %>
-        <%= f.text_field :weight_unit, placeholder: 'Weight unit'  %>
-      </fieldset>
+      <%= render partial: 'dimension_fields', locals: {form: f} %>
       <%= f.submit 'Update dimension' %>
     <% end %>
     <% if @dimension.product.dimensions.count > 1 %>
