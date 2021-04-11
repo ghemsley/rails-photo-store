@@ -1,0 +1,7 @@
+<fieldset>
+  <legend>Price modifier</legend>
+  <%= form.label :number, 'Number' %>
+  <%= form.number_field :number, min: 0.00, step: 0.01, placeholder: 'Number' %>
+  <%= form.label :unit, 'Unit' %>
+  <%= form.text_field :unit, placeholder: 'Unit' %>
+</fieldset>
