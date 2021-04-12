@@ -2,7 +2,7 @@
   <h1>New product</h1>
   <%= render partial: 'shared/errors', locals: {model: @product} %>
   <div class='form-container background-white'>
-    <%= form_with model: @product, url: category_products_path(@category_id, @product), class: 'pure-form pure-form-stacked' do |f| %>
+    <%= form_with model: @product, url: category_products_path(@category_id), class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>
         <%= render partial: 'product_fields', locals: {form: f} %>
         <%= f.collection_select :category_id, Category.order(:id), :id, :name, {selected: @category_id} %>

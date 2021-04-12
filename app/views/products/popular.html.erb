@@ -15,7 +15,7 @@
         description: hash[:product].description, 
         price: hash[:product].price, 
         price_unit: hash[:product].price_unit, 
-        url: category_product_url(hash[:product].category, hash[:product]), 
+        url: product_url(hash[:product]), 
         image: url_for(hash[:product].image), 
         thumbnail: url_for(hash[:product].image.variant(resize_to_limit: [480, 720]).processed), 
         thumbnail_large: url_for(hash[:product].image.variant(resize_to_limit: [1440, 2160]).processed),
@@ -24,7 +24,7 @@
         class_name: 'corner-rounded padding-1 margin-1 background-white' ) %>
         <p class='margin-0 margin-top-1'>Purchased <%= hash[:amount] %> time<%= hash[:amount] != 1 ? 's' : nil %></p>
         <% if admin_signed_in? %>
-          <%= link_to 'Edit', edit_category_product_path(hash[:product].category_id, hash[:product]), class: 'pure-button margin-top-1' %>
+          <%= link_to 'Edit', edit_product_path(hash[:product]), class: 'pure-button margin-top-1' %>
         <% end %>
       </div>
     <% end %>

@@ -2,19 +2,19 @@
   <h1>Edit product</h1>
   <%= render partial: 'shared/errors', locals: {model: @product} %>
   <div class='form-container background-white'>
-    <%= form_with model: @product, url: category_product_path(@product.category, @product), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
+    <%= form_with model: @product, class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>
         <%= render partial: 'product_fields', locals: {form: f} %>
         <%= f.collection_select :category_id, Category.order(:id), :id, :name, {selected: @product.category_id} %>
       </fieldset>
       <%= f.submit 'Update product' %>
     <% end %>
-    <%= button_to 'Destroy this product', category_product_path(@category_id, @product), method: 'delete' %>
+    <%= button_to 'Destroy this product', product_path(@product), method: 'delete' %>
   </div>
   <div class='edit-links'>
-    <%= link_to "Go to new dimension form for product #{@product.id}", new_category_product_dimension_path(@category_id, @product.id) %>
+    <%= link_to "Go to new dimension form for product #{@product.id}", new_category_product_dimension_path(@product.category_id, @product.id) %>
     <% @product.dimensions.each do |dimension| %>
-      <%= link_to "Go to edit form for dimension #{dimension.id} of product #{@product.id}", edit_category_product_dimension_path(@category_id, @product, dimension) %>
+      <%= link_to "Go to edit form for dimension #{dimension.id} of product #{@product.id}", edit_dimension_path(dimension) %>
     <% end %>
   </div>
 </div>

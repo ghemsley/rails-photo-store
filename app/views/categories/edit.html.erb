@@ -2,7 +2,7 @@
   <h1>Edit category</h1>
   <%= render partial: 'shared/errors', locals: {model: @category} %>
   <div class='form-container background-white'>
-    <%= form_with model: @category, url: category_path(@category), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
+    <%= form_with model: @category, class: 'pure-form pure-form-stacked' do |f| %>
       <%= render partial: 'category_fields', locals: {form: f} %>
       <%= f.submit 'Update category' %>
     <% end %>

@@ -9,7 +9,7 @@
   description: @product.description, 
   price: @product.price, 
   price_unit: @product.price_unit, 
-  url: category_product_url(@product.category, @product), 
+  url: product_url(@product), 
   image: url_for(@product.image), 
   thumbnail: url_for(@product.image.variant(resize_to_limit: [480, 720]).processed), 
   thumbnail_large: url_for(@product.image.variant(resize_to_limit: [1440, 2160]).processed), 
@@ -19,10 +19,10 @@
 </div>
 <% if admin_signed_in? %>
   <div class='pure-u-1 padding-1 column center center-children'>
-    <%= link_to 'Edit product', edit_category_product_path(@category_id, @product), class: 'pure-button margin-vertical-1 fit-content' %>
-    <%= link_to 'Add new dimension', new_category_product_dimension_path(@category_id, @product), class: 'pure-button margin-vertical-1 fit-content' %>
+    <%= link_to 'Edit product', edit_product_path(@product), class: 'pure-button margin-vertical-1 fit-content' %>
+    <%= link_to 'Add new dimension', new_category_product_dimension_path(@product.category_id, @product), class: 'pure-button margin-vertical-1 fit-content' %>
     <% @product.dimensions.each.with_index(1) do |dimension, index| %>
-      <%= link_to "Edit dimension #{index}", edit_category_product_dimension_path(@category_id, @product, dimension), class: 'pure-button fit-content margin-vertical-1' %>
+      <%= link_to "Edit dimension #{index}", edit_dimension_path(dimension), class: 'pure-button fit-content margin-vertical-1' %>
     <% end %>
   </div>
 <% end %>

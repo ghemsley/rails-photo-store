@@ -7,7 +7,17 @@
   </div>
   <% @categories.each do |category| %>
     <div class='pure-u-1-1 margin-bottom-2'>
-      <%= react_component('CategorySlider', lazy: 'progressive', description: false, autoplay: true, arrows: true, dots: true, infinite: true, speed: 500, slides_to_show: 3, slides_to_scroll: 1, json: category.slider_props_json) %>
+      <%= react_component('CategorySlider',
+      lazy: 'progressive',
+      description: false,
+      autoplay: true,
+      arrows: true,
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slides_to_show: 3,
+      slides_to_scroll: 1,
+      json: category.slider_props_json) %>
     </div>
   <% end %>
 </div>

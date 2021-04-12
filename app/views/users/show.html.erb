@@ -27,7 +27,7 @@
           description: product.description, 
           price: product.price, 
           price_unit: product.price_unit, 
-          url: category_product_url(product.category, product), 
+          url: product_url(product), 
           image: url_for(product.image), 
           thumbnail: url_for(product.image.variant(resize_to_limit: [480, 720]).processed), 
           thumbnail_large: url_for(product.image.variant(resize_to_limit: [1440, 2160]).processed), 
@@ -35,7 +35,7 @@
           lightbox: false, 
           class_name: 'corner-rounded padding-1 background-white' ) %>
           <% if admin_signed_in? %>
-            <%= link_to 'Edit', edit_category_product_path(product.category, product), class: 'pure-button center margin-vertical-1' %>
+            <%= link_to 'Edit', edit_product_path(product), class: 'pure-button center margin-vertical-1' %>
           <% end %>
         </div>
       <% end %>

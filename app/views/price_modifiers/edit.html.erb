@@ -1,17 +1,17 @@
 <div class='pure-u-1 center'>
-  <h1>Edit price modifier <%= @price_modifier.id %> for dimension <%= @dimension_id %> of product <%= @product_id %></h1>
+  <h1>Edit price modifier <%= @price_modifier.id %> for dimension <%= @price_modifier.dimension_id %> of product <%= @product_id %></h1>
   <%= render partial: 'shared/errors', locals: {model: @price_modifier} %>
   <div class='form-container background-white'>
-    <%= form_with model: @price_modifier, url: category_product_dimension_price_modifier_path(@category_id, @product_id, @dimension_id, @price_modifier), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
+    <%= form_with model: @price_modifier, class: 'pure-form pure-form-stacked' do |f| %>
       <%= render partial: 'price_modifier_fields', locals: {form: f} %>
       <%= f.submit 'Update price modifier' %>
     <% end %>
     </div>
   <div class='edit-links'>
-    <%= link_to "Go to edit form for product #{@product_id}", edit_category_product_path(@category_id, @product_id) %>
-    <%= link_to "Go to edit form for dimension #{@dimension_id} of product #{@product_id}", edit_category_product_dimension_path(@category_id, @product_id, @dimension_id) %>
+    <%= link_to "Go to edit form for product #{@product_id}", edit_product_path(@product_id) %>
+    <%= link_to "Go to edit form for dimension #{@price_modifier.dimension_id} of product #{@product_id}", edit_dimension_path(@price_modifier.dimension_id) %>
     <% @price_modifier.dimension.product.dimensions.each do |dimension| %>
-      <%= dimension.price_modifier.id != @price_modifier.id ? (link_to "Go to edit form for price modifier of dimension #{dimension.id} of product #{@product_id}", edit_category_product_dimension_price_modifier_path(@category_id, @product_id, dimension, dimension.price_modifier)) : nil %>
+      <%= dimension.price_modifier.id != @price_modifier.id ? (link_to "Go to edit form for price modifier of dimension #{dimension.id} of product #{dimension.product_id}", edit_price_modifier_path(dimension.price_modifier)) : nil %>
     <% end %>
   </div>
 </div>

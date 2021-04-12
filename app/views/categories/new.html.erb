@@ -3,7 +3,7 @@
   <%= render partial: 'shared/errors', locals: {model: @category} %>
   <div class='form-container background-white'>
     <%= form_with model: @category, class: 'pure-form pure-form-stacked' do |f| %>
-      <%= render partial: 'dimension_fields', locals: {form: f} %>
+      <%= render partial: 'category_fields', locals: {form: f} %>
       <%= f.submit 'Create category' %>
     <% end %>
   </div>
