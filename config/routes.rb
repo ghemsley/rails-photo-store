@@ -1,21 +1,17 @@
 Rails.application.routes.draw do
   resources :categories do
-    resources :products, only: %i[index show new create edit update destroy] do
-      resources :dimensions, only: %i[new create edit update destroy] do
-        resources :price_modifiers, only: %i[edit update]
-      end
+    resources :products, only: %i[index new create] do
+      resources :dimensions, only: %i[new create]
     end
   end
 
-  resources :users
-  # resources :users do
-  #   resources :carts
-  #   resources :orders
-  # end
-
-  resources :admins
-
   get '/products/popular', to: 'products#popular', as: :popular_products
+  resources :products, only: %i[show edit update destroy]
+  resources :dimensions, only: %i[edit update destroy]
+  resources :price_modifiers, only: %i[edit update]
+
+  resources :users
+  resources :admins
 
   get '/search', to: 'searches#search', as: :search
 
