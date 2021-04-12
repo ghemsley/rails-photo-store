@@ -15,7 +15,7 @@ class Category < ApplicationRecord
         description: product.description,
         price: product.price,
         price_unit: product.price_unit,
-        url: category_product_url(self, product),
+        url: product_url(product),
         image: url_for(product.image),
         thumbnail: url_for(product.image.variant(resize_to_limit: [480, 720]).processed),
         thumbnail_large: url_for(product.image.variant(resize_to_limit: [1440, 2160]).processed),

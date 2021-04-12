@@ -8,7 +8,6 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @category_id = params[:category_id]
     @product = Product.find(params[:id])
   end
 
@@ -21,7 +20,7 @@ class ProductsController < ApplicationController
   def create
     product = Product.new
     if create_product(product)
-      redirect_to category_product_path(product.category, product)
+      redirect_to product_path(product)
     else
       @category_id = params[:product][:category_id]
       @product = product
@@ -31,14 +30,13 @@ class ProductsController < ApplicationController
 
   def edit
     redirect_unless_admin_signed_in
-    @category_id = params[:category_id]
     @product = Product.find(params[:id])
   end
 
   def update
     product = Product.find(params[:id])
     if update_product(product)
-      redirect_to category_product_path(product.category, product)
+      redirect_to product_path(product)
     else
       @category_id = params[:product][:category_id]
       @product = product
@@ -47,14 +45,14 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    category = Category.find(params[:category_id])
     product = Product.find(params[:id])
+    category_id = product.category_id
     if product.destroy
       flash[:notice] = "Destroyed product #{params[:id]}"
-      redirect_to category_products_path(category)
+      redirect_to category_path(category_id)
     else
       flash[:error] = "Failed to destroy product #{params[:id]}"
-      redirect_to edit_category_product_path(category, product)
+      redirect_to edit_product_path(product)
     end
   end
 
