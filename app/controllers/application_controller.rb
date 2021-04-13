@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def admin_secret
+    Rails.application.credentials.rails_admin_secret
+  end
+
   def redirect_unless_signed_in
     return @user if session[:current_user_id] && @user
 
@@ -55,7 +59,7 @@ class ApplicationController < ActionController::Base
       when 'patch'
         req = Net::HTTP::Patch.new(uri)
       else
-        pp "Warning: invalid method for API request, defaulting to 'get'"
+        logger.info "Warning: invalid method for API request, defaulting to 'get'"
         req = Net::HTTP::Get.new(uri)
       end
       req['Content-Type'] = 'application/hal+json'
@@ -90,7 +94,7 @@ class ApplicationController < ActionController::Base
       if refresh_token
         data = JSON.parse(res.body)
         access_token = data['access_token']
-        puts 'Making test request with refreshed token...'
+        logger.info 'Making test request with refreshed token...'
         test_res = if url
                      foxycart_api_request(url: url, access_token: access_token)
                    else
@@ -98,7 +102,7 @@ class ApplicationController < ActionController::Base
                    end
         case test_res
         when Net::HTTPSuccess, Net::HTTPRedirection
-          puts 'Test request successful!'
+          logger.info 'Test request successful!'
           ENV['NEW_FOXYCART_ACCESS_TOKEN'] = data['access_token'].to_s
           pp test_res
         else
@@ -108,7 +112,7 @@ class ApplicationController < ActionController::Base
         pp res
       end
     when Net::HTTPUnauthorized
-      puts 'Unauthorized: Refreshing token...'
+      logger.info 'Unauthorized: Refreshing token...'
       new_res = foxycart_api_request(refresh_token: Rails.application.credentials.foxycart_refresh_token)
       case new_res
       when Net::HTTPSuccess, Net::HTTPRedirection
