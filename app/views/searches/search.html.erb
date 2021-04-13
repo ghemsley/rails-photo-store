@@ -14,19 +14,8 @@
   <div class='display-flex margin-vertical-1 search-results-container center'>
     <% @products.each do |product| %>
       <div>
-        <%= react_component('ProductCard', 
-        full_size: false, name: product.name, 
-        id: product.id, 
-        description: product.description, 
-        price: product.price, 
-        price_unit: product.price_unit, 
-        url: product_url(product), 
-        image: url_for(product.image), 
-        thumbnail: url_for(product.image.variant(resize_to_limit: [480, 720]).processed), 
-        thumbnail_large: url_for(product.image.variant(resize_to_limit: [1440, 2160]).processed), 
-        dimensions_json: product.dimensions_json, 
-        lightbox: false, 
-        class_name: 'corner-rounded padding-1 background-white' ) %>
+        <%= render partial: 'products/product_card', locals: {model: product, full_size: false, show_description: false, lightbox: false,
+        class_name: 'corner-rounded padding-1 margin-1 background-white'} %>
         <% if admin_signed_in? %>
           <%= link_to 'Edit', edit_product_path(product), class: 'pure-button center margin-vertical-1' %>
         <% end %>

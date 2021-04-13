@@ -1,21 +1,8 @@
 <%= javascript_pack_tag 'productCard' %>
 <%= stylesheet_pack_tag 'productCard' %>
 <div class='pure-u-1 center margin-vertical-1'>
-  <%= react_component('ProductCard', 
-  full_size: true, 
-  show_description: true, 
-  name: @product.name, 
-  id: @product.id, 
-  description: @product.description, 
-  price: @product.price, 
-  price_unit: @product.price_unit, 
-  url: product_url(@product), 
-  image: url_for(@product.image), 
-  thumbnail: url_for(@product.image.variant(resize_to_limit: [480, 720]).processed), 
-  thumbnail_large: url_for(@product.image.variant(resize_to_limit: [1440, 2160]).processed), 
-  dimensions_json: @product.dimensions_json, 
-  lightbox: true, 
-  class_name: 'corner-rounded margin-auto padding-1 full-size background-white' ) %>
+  <%= render partial: 'product_card', locals: { model: @product, full_size: true, show_description: true, lightbox: true,
+  class_name: 'corner-rounded margin-auto padding-1 full-size background-white' } %>
 </div>
 <% if admin_signed_in? %>
   <div class='pure-u-1 padding-1 column center center-children'>

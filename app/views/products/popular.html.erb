@@ -8,20 +8,8 @@
   <div class='display-flex margin-vertical-1'>
     <% @products_with_amounts.each do |hash| %>
       <div>
-        <%= react_component('ProductCard',
-        full_size: false, 
-        name: hash[:product].name, 
-        id: hash[:product].id, 
-        description: hash[:product].description, 
-        price: hash[:product].price, 
-        price_unit: hash[:product].price_unit, 
-        url: product_url(hash[:product]), 
-        image: url_for(hash[:product].image), 
-        thumbnail: url_for(hash[:product].image.variant(resize_to_limit: [480, 720]).processed), 
-        thumbnail_large: url_for(hash[:product].image.variant(resize_to_limit: [1440, 2160]).processed),
-        dimensions_json: hash[:product].dimensions_json, 
-        lightbox: false, 
-        class_name: 'corner-rounded padding-1 margin-1 background-white' ) %>
+        <%= render partial: 'product_card', locals: {model: hash[:product], full_size: false, show_description: false, lightbox: false,
+        class_name: 'corner-rounded padding-1 margin-1 background-white'} %>
         <p class='margin-0 margin-top-1'>Purchased <%= hash[:amount] %> time<%= hash[:amount] != 1 ? 's' : nil %></p>
         <% if admin_signed_in? %>
           <%= link_to 'Edit', edit_product_path(hash[:product]), class: 'pure-button margin-top-1' %>
