@@ -1,4 +1,4 @@
-# Meme Generator
+# Rails Photo Store
 
 A Ruby on Rails eCommerce app for selling photography prints
 
