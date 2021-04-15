@@ -13,14 +13,14 @@ class AdminsController < ApplicationController
   end
 
   def create
-    if params[:admin][:password] == helpers.admin_secret
+    if params[:admin][:password] == admin_secret
       admin = Admin.new(admin_params(:username, :email, :password))
       if admin.save
         flash[:notice] = 'Created new admin account'
         redirect_to admin_signin_path
       else
-        flash[:error] = 'Failed to create new admin account'
-        redirect_to new_admin_path
+        @admin = admin
+        render :new
       end
     else
       flash[:error] = 'Unauthorized'
@@ -34,14 +34,15 @@ class AdminsController < ApplicationController
 
   def update
     admin = Admin.find(params[:id])
-    if admin.authenticate(params[:admin][:password])
+    if admin&.authenticate(params[:admin][:password])
       admin.password = params[:admin][:new_password] if params[:admin][:new_password]
       params[:admin].each do |param_name, _param_value|
         admin.update(admin_params(param_name)) unless %w[password new_password].include?(param_name.to_s)
       end
       redirect_to admin_path(admin)
     else
-      redirect_to edit_admin_path(admin)
+      @admin = admin
+      render :edit
     end
   end
 

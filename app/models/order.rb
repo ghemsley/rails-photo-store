@@ -1,3 +1,4 @@
+# Currently unused
 class Order < ApplicationRecord
   has_one :cart
   has_many :quantities, through: :cart

@@ -14,7 +14,12 @@ class CategoriesController < ApplicationController
 
   def create
     category = Category.new
-    update_category(category)
+    if update_category(category)
+      redirect_to category_path(category)
+    else
+      @category = category
+      render :new
+    end
   end
 
   def edit
@@ -24,7 +29,12 @@ class CategoriesController < ApplicationController
 
   def update
     category = Category.find(params[:id])
-    update_category(category)
+    if update_category(category)
+      redirect_to category_path(category)
+    else
+      @category = category
+      render :edit
+    end
   end
 
   def destroy
@@ -43,10 +53,9 @@ class CategoriesController < ApplicationController
   def update_category(category)
     if category.update(category_params(:name, :description))
       flash[:notice] = "Saved category #{params[:category][:name]}"
-      redirect_to category_path(category)
+      true
     else
-      flash[:error] = 'Failed to save category'
-      redirect_to new_category_path
+      false
     end
   end
 

@@ -1,5 +1,6 @@
 <div class='pure-u-1 center'>
   <h1>Sign up</h1>
+  <%= render partial: 'shared/errors', locals: {model: @user} %>
   <div class='form-container background-white'>
     <%= form_with model: @user, class: 'pure-form pure-form-stacked' do |f| %>
       <%= f.label :email, 'Email' %>

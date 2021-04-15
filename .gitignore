@@ -39,3 +39,8 @@
 yarn-debug.log*
 .yarn-integrity
 .env
+Gemfile.lock
+
+/config/credentials/production.key
+
+/config/credentials/development.key

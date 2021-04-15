@@ -1,7 +1,7 @@
 <%= javascript_pack_tag 'productCard' %>
 <%= stylesheet_pack_tag 'productCard' %>
-<div class='pure-u-1 center'>
-  <div class='pure-u-1 fit-content background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded white-space-nowrap'>
+<div class='pure-u-1'>
+  <div class='fit-content background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded white-space-nowrap'>
     <h1 class='margin-0 horizontal-padding-1 uppercase'>Search results</h1>
     <% if @products.empty? %>
       <p class='margin-0 horizontal-padding-1 subheading'>Your search returned no results</p>
@@ -11,57 +11,21 @@
       <p class='margin-0 horizontal-padding-1 subheading'>Products matching the query '<%= @query %>'</p>
     <% end %>
   </div>
-  <div class='display-flex margin-vertical-1 search-results-container'>
+  <div class='display-flex margin-vertical-1 search-results-container center'>
     <% @products.each do |product| %>
-      <div class='search-container'>
-        <%= react_component('ProductCard', 
-        full_size: false, name: product.name, 
-        id: product.id, 
-        description: product.description, 
-        price: product.price, 
-        price_unit: product.price_unit, 
-        url: category_product_url(product.category, product), 
-        image: url_for(product.image), 
-        thumbnail: url_for(product.image.variant(resize_to_limit: [480, 720]).processed), 
-        thumbnail_medium: url_for(product.image.variant(resize_to_limit: [960, 1440]).processed),
-        thumbnail_large: url_for(product.image.variant(resize_to_limit: [1440, 2160]).processed), 
-        dimensions_json: product.dimensions_json, 
-        lightbox: false, 
-        class_name: 'corner-rounded padding-1 background-white' ) %>
+      <div>
+        <%= render partial: 'products/product_card', locals: {model: product, full_size: false, show_description: false, lightbox: false,
+        class_name: 'corner-rounded padding-1 margin-1 background-white'} %>
         <% if admin_signed_in? %>
-          <%= link_to 'Edit', edit_category_product_path(product.category, product), class: 'pure-button center margin-vertical-1' %>
+          <%= link_to 'Edit', edit_product_path(product), class: 'pure-button center margin-vertical-1' %>
         <% end %>
       </div>
     <% end %>
   </div>
-  <div class='pure-u-1 fit-content background-white padding-1 shadow corner-rounded margin-vertical-1'>
-    <%= form_with url: "/search", method: :get, class: 'pure-form pure-form-aligned' do |form| %>
+  <div class='pure-u-1 center column fit-content background-white padding-1 shadow corner-rounded margin-vertical-1'>
+    <%= form_with url: "/search", method: :get, class: 'pure-form pure-form-aligned center margin-auto' do |form| %>
       <%= form.hidden_field :query, value: @query %>
-      <fieldset>
-        <%= form.text_field :"filters[name_contains]", placeholder: 'Name contains:' %>
-        <%= form.text_field :"filters[description_contains]", placeholder: 'Description contains:' %>
-        <%= form.text_field :"filters[tags_contains]", placeholder: 'Tags contain:' %>
-      </fieldset>
-      <fieldset>
-        <%= form.number_field :"filters[price_over]", min: 0, placeholder: 'Price over:' %>
-        <%= form.number_field :"filters[price_under]", min: 0, placeholder: 'Price under:' %>
-      </fieldset>
-      <fieldset>
-        <%= form.number_field :"filters[length_over]", min: 0, placeholder: 'Length over:' %>
-        <%= form.number_field :"filters[length_under]", min: 0, placeholder: 'Length under:' %>
-      </fieldset>
-      <fieldset>
-        <%= form.number_field :"filters[width_over]", min: 0, placeholder: 'Width over:' %>
-        <%= form.number_field :"filters[width_under]", min: 0, placeholder: 'Width under:' %>
-      </fieldset>
-      <fieldset>
-        <%= form.number_field :"filters[height_over]", min: 0, placeholder: 'Height over:' %>
-        <%= form.number_field :"filters[height_under]", min: 0, placeholder: 'Height under:' %>
-      </fieldset>
-      <fieldset>
-        <%= form.number_field :"filters[weight_over]", min: 0, placeholder: 'Weight over:' %>
-        <%= form.number_field :"filters[weight_under]", min: 0, placeholder: 'Weight under:' %>
-      </fieldset>
+      <%= render partial: 'search_form_fields', locals: {form: form} %>
       <%= form.submit 'Filter search' %>
     <% end %>
   </div>

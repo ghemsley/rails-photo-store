@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RailsPhotoStore</title>
+    <title>Photo prints by Graham Hemsley</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -17,7 +17,8 @@
     <% if flash %>
       <% flash.each do |message_name, message_value| %>
         <div class="flash <%= message_name.to_s %>">
-          <p><%= "#{message_name}: #{message_value}" %></p>
+          <div class="flash-close-button" onclick="this.parentElement.remove()">&times;</div>
+          <p class='flash-content margin-0'><%= "#{message_name}: #{message_value}" %></p>
         </div>
       <% end %>
     <% end %>
@@ -43,17 +44,24 @@
           </li>
           </li>
         <% end %>
-        <% if signed_in? %>
-          <li class='pure-menu-item'>
-            <%= link_to 'Sign out', signout_path, class: 'pure-menu-link' %>
-          </li>
-        <% else %>
-          <li class='pure-menu-item'>
-            <%= link_to 'Sign in', signin_form_path, class: 'pure-menu-link' %>
-          </li>
-          <li class='pure-menu-item'>
-            <%= link_to 'Sign up', new_user_path, class: 'pure-menu-link' %>
-          </li>
+        <% if !admin_signed_in? %>
+          <% if signed_in? %>
+            <% if @user %>
+              <li class='pure-menu-item'>
+                <%= link_to 'Account', user_path(@user), class: 'pure-menu-link' %>
+              </li>
+            <% end %>
+            <li class='pure-menu-item'>
+              <%= link_to 'Sign out', signout_path, class: 'pure-menu-link' %>
+            </li>
+          <% else %>
+            <li class='pure-menu-item'>
+              <%= link_to 'Sign in', signin_form_path, class: 'pure-menu-link' %>
+            </li>
+            <li class='pure-menu-item'>
+              <%= link_to 'Sign up', new_user_path, class: 'pure-menu-link' %>
+            </li>
+          <% end %>
         <% end %>
         <% Category.all.each do |category| %>
           <li class='pure-menu-item'>
@@ -61,31 +69,43 @@
           </li>
         <% end %>
         <li class='pure-menu-item'>
-          <%= form_with url: "/search", method: :get, class: 'pure-form pure-form margin-auto padding-0' do |form| %>
-            <%= form.text_field :query, placeholder: 'Search' %>
-          <% end %>
+          <%= link_to 'Popular', popular_products_path, class: 'pure-menu-link' %>
         </li>
         <li class='pure-menu-item'>
-          <a class="button-cart pure-button button-success" href='https://ghemsleyphotos.foxycart.com/cart?cart=view'>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                width="512px" height="512px" viewBox="0 0 512 512">
-              <g>
-                <path fill='white' d="M176.008,416c-26.5,0-48,21.469-48,48s21.5,48,48,48s48-21.469,48-48S202.508,416,176.008,416z"/>
-                <path fill='white' d="M303.992,416c-26.516,0-47.984,21.469-47.984,48s21.469,48,47.984,48c26.563,0,48-21.469,48-48S330.555,416,303.992,416z"
-                  />
-                <path fill='white' d="M495.992,0h-80c-7.688,0-14.313,5.531-15.75,13.125L390.992,64H16.008c-5.344,0-10.344,2.688-13.313,7.125
-                  S-0.82,81.219,1.242,86.156l80,192c2.484,5.969,8.313,9.844,14.766,9.844h254.297l-11.625,64H128.008c-8.844,0-16,7.156-16,16
-                  s7.156,16,16,16h223.984c7.75,0,14.375-5.531,15.75-13.125L429.367,32h66.625c8.875,0,16-7.156,16-16S504.867,0,495.992,0z
-                  M356.117,256H106.68L40.008,96H385.18L356.117,256z"/>
-              </g>
-            </svg>
-            <span data-fc-id='minicart-quantity'></span>
-          </a>
+          <%= render partial: 'shared/search_button' %>
+        </li>
+        <li class='pure-menu-item'>
+          <%= render partial: 'shared/cart_button' %>
         </li>
       </ul>
     </div>
     <div id='content' class='content pure-g'>
       <%= yield %>
     </div>
+    <div id='footer' class='pure-g pure-menu pure-menu-horizontal shadow background-white'>
+      <ul id='footer-container' class='pure-u-1 pure-menu-list'>
+        <li class='pure-menu-item'>
+          <p class='margin-auto'>
+            made by <a href='https://www.github.com/ghemsley' class='pure-link margin-auto'>Graham Hemsley</a>
+          </p>
+        </li>
+        <li class='pure-menu-item'>
+          <p class='margin-auto'>|</p>
+        </li>
+        <li class='pure-menu-item'>
+          <a href='https://www.grahamhemsley.com' class='pure-link margin-auto'>
+            Blog
+          </a>
+        </li>
+      </ul>
+    </div>
   </body>
+  <script>
+    var flash = document.querySelector('.flash')
+    if (flash != null) {
+      setTimeout(() => {
+        flash.remove()
+      }, 5000);
+    }
+  </script>
 </html>

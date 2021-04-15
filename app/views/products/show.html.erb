@@ -1,29 +1,15 @@
 <%= javascript_pack_tag 'productCard' %>
 <%= stylesheet_pack_tag 'productCard' %>
 <div class='pure-u-1 center margin-vertical-1'>
-  <%= react_component('ProductCard', 
-  full_size: true, 
-  show_description: true, 
-  name: @product.name, 
-  id: @product.id, 
-  description: @product.description, 
-  price: @product.price, 
-  price_unit: @product.price_unit, 
-  url: category_product_url(@product.category, @product), 
-  image: url_for(@product.image), 
-  thumbnail: @product.image.variant(resize_to_limit: [480, 720]).processed.url, 
-  thumbnail_medium: @product.image.variant(resize_to_limit: [960, 1440]).processed.url, 
-  thumbnail_large: @product.image.variant(resize_to_limit: [1440, 2160]).processed.url, 
-  dimensions_json: @product.dimensions_json, 
-  lightbox: true, 
-  class_name: 'corner-rounded margin-auto padding-1 full-size background-white' ) %>
+  <%= render partial: 'product_card', locals: { model: @product, full_size: true, show_description: true, lightbox: true,
+  class_name: 'corner-rounded margin-auto padding-1 full-size background-white' } %>
 </div>
 <% if admin_signed_in? %>
   <div class='pure-u-1 padding-1 column center center-children'>
-    <%= link_to 'Edit product', edit_category_product_path(@category_id, @product), class: 'pure-button margin-vertical-1 fit-content' %>
-    <%= link_to 'Add new dimension', new_category_product_dimension_path(@category_id, @product), class: 'pure-button margin-vertical-1 fit-content' %>
+    <%= link_to 'Edit product', edit_product_path(@product), class: 'pure-button margin-vertical-1 fit-content' %>
+    <%= link_to 'Add new dimension', new_category_product_dimension_path(@product.category_id, @product), class: 'pure-button margin-vertical-1 fit-content' %>
     <% @product.dimensions.each.with_index(1) do |dimension, index| %>
-      <%= link_to "Edit dimension #{index}", edit_category_product_dimension_path(@category_id, @product, dimension), class: 'pure-button fit-content margin-vertical-1' %>
+      <%= link_to "Edit dimension #{index}", edit_dimension_path(dimension), class: 'pure-button fit-content margin-vertical-1' %>
     <% end %>
   </div>
 <% end %>

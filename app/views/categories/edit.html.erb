@@ -1,11 +1,9 @@
 <div class='pure-u-1 center'>
   <h1>Edit category</h1>
+  <%= render partial: 'shared/errors', locals: {model: @category} %>
   <div class='form-container background-white'>
-    <%= form_with model: @category, url: category_path(@category), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
-      <%= f.label :name, 'Name' %>
-      <%= f.text_field :name %>
-      <%= f.label :description, 'Description' %>
-      <%= f.text_field :description %>
+    <%= form_with model: @category, class: 'pure-form pure-form-stacked' do |f| %>
+      <%= render partial: 'category_fields', locals: {form: f} %>
       <%= f.submit 'Update category' %>
     <% end %>
     <%= button_to 'Destroy this category', category_path(@category), method: 'delete' %>

@@ -23,7 +23,7 @@ module RailsPhotoStore
                                                             'localhost:5000'
                                                           elsif Rails.env == 'development' &&
                                                                 RUBY_PLATFORM.include?('linux')
-                                                            '45.56.76.170:5000'
+                                                            'photos.grahamhemsley.com'
                                                           else
                                                             'photos.grahamhemsley.com'
                                                           end

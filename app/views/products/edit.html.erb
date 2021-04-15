@@ -1,32 +1,20 @@
 <div class='pure-u-1 center'>
   <h1>Edit product</h1>
+  <%= render partial: 'shared/errors', locals: {model: @product} %>
   <div class='form-container background-white'>
-    <%= form_with model: @product, url: category_product_path(@product.category, @product), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
+    <%= form_with model: @product, class: 'pure-form pure-form-stacked' do |f| %>
       <fieldset>
-        <legend>Product</legend>
-        <%= f.label :name, 'Name' %>
-        <%= f.text_field :name %>
-        <%= f.label :description, 'Description' %>
-        <%= f.text_area :description, cols: 40, rows: 5, placeholder: 'Description'  %>
-        <%= f.label :tags, 'Tags' %>
-        <%= f.text_area :tags, cols: 40, rows: 5, placeholder: 'Space-separated list of tags'  %>
-        <%= f.label :price, 'Price' %>
-        <%= f.number_field :price, min: 0.00, step: 0.01 %>
-        <%= f.label :price_unit, 'Price unit' %>
-        <%= f.text_field :price_unit %>
-        <%= f.label  :image, 'Image' %>
-        <%= f.file_field :image %>
-        <%= f.label  :category_id, 'Category' %>
-        <%= f.collection_select :category_id, Category.order(:id), :id, :name %>
+        <%= render partial: 'product_fields', locals: {form: f} %>
+        <%= f.collection_select :category_id, Category.order(:id), :id, :name, {selected: @product.category_id} %>
       </fieldset>
       <%= f.submit 'Update product' %>
     <% end %>
-    <%= button_to 'Destroy this product', category_product_path(@category_id, @product), method: 'delete' %>
+    <%= button_to 'Destroy this product', product_path(@product), method: 'delete' %>
   </div>
   <div class='edit-links'>
-    <%= link_to "Go to new dimension form for product #{@product.id}", new_category_product_dimension_path(@category_id, @product.id) %>
+    <%= link_to "Go to new dimension form for product #{@product.id}", new_category_product_dimension_path(@product.category_id, @product.id) %>
     <% @product.dimensions.each do |dimension| %>
-      <%= link_to "Go to edit form for dimension #{dimension.id} of product #{@product.id}", edit_category_product_dimension_path(@category_id, @product, dimension) %>
+      <%= link_to "Go to edit form for dimension #{dimension.id} of product #{@product.id}", edit_dimension_path(dimension) %>
     <% end %>
   </div>
 </div>

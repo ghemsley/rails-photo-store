@@ -9,10 +9,7 @@ class Product < ApplicationRecord
   has_many :quantities
   has_many :users, through: :quantities
 
-  has_one_attached :image, dependent: :destroy do |image|
-    image.variant(:thumbnail, resize_to_limit: [640, 640])
-    image.variant(:thumbnail_medium, resize_to_limit: [1080, 1080])
-  end
+  has_one_attached :image, dependent: :destroy
 
   belongs_to :category, optional: false
 
@@ -73,13 +70,21 @@ class Product < ApplicationRecord
     search
   end
 
+  def self.most_popular
+    Product.joins(:quantities).order('amount DESC').group(:product_id).sum(:amount).collect do |product_id, amount|
+      {product: Product.find(product_id), amount: amount}
+    end.sort do |a, b|
+      a[:amount] <=> b[:amount]
+    end.reverse
+  end
+
   # Instance methods
   def tags_to_a
     tags.downcase.strip.split
   end
 
   def dimensions_json
-    JSON.generate(dimensions.collect do |dimension|
+    dimensions.collect do |dimension|
       { price_modifier: dimension.price_modifier.number,
         length: dimension.length,
         width: dimension.width,
@@ -88,6 +93,6 @@ class Product < ApplicationRecord
         distance_unit: dimension.distance_unit,
         weight_unit: dimension.weight_unit,
         distances_string: dimension.distances_to_s }
-    end).to_s
+    end.to_json
   end
 end

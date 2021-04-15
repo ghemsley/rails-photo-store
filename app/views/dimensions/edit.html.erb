@@ -1,36 +1,20 @@
 <div class='pure-u-1 center'>
-  <h1>Edit dimension with id <%= @dimension.id %> for product <%= @product_id %></h1>
+  <h1>Edit dimension with id <%= @dimension.id %> for product <%= @dimension.product_id %></h1>
+  <%= render partial: 'shared/errors', locals: {model: @dimension} %>
   <div class='form-container background-white'>
-    <%= form_with model: @dimension, url: category_product_dimension_path(@category_id, @product_id, @dimension), method: 'patch', class: 'pure-form pure-form-stacked' do |f| %>
-      <fieldset>
-        <legend>Distance measurements</legend>
-        <%= f.label :length, 'Length' %>
-        <%= f.number_field :length, min: 0.00, step: 0.01, placeholder: 'Length' %>
-        <%= f.label :width, 'Width' %>
-        <%= f.number_field :width, min: 0.00, step: 0.01, placeholder: 'Width'  %>
-        <%= f.label :height, 'Height' %>
-        <%= f.number_field :height, min: 0.00, step: 0.01, placeholder: 'Height' %>
-        <%= f.label :distance_unit, 'Distance unit' %>
-        <%= f.text_field :distance_unit, placeholder: 'Distance unit'  %>
-      </fieldset>
-      <fieldset>
-        <legend>Weight measurements</legend>
-        <%= f.label  :weight, 'Weight' %>
-        <%= f.number_field :weight, min: 0.00, step: 0.01, placeholder: 'Weight'  %>
-        <%= f.label  :weight_unit, 'Weight unit' %>
-        <%= f.text_field :weight_unit, placeholder: 'Weight unit'  %>
-      </fieldset>
+    <%= form_with model: @dimension, class: 'pure-form pure-form-stacked' do |f| %>
+      <%= render partial: 'dimension_fields', locals: {form: f} %>
       <%= f.submit 'Update dimension' %>
     <% end %>
     <% if @dimension.product.dimensions.count > 1 %>
-      <%= button_to 'Destroy this dimension', category_product_dimension_path(@category_id, @product_id, @dimension), method: 'delete' %>
+      <%= button_to 'Destroy this dimension', dimension_path(@dimension), method: 'delete' %>
     <% end %>
   </div>
   <div class='edit-links'>
-    <%= link_to "Go to edit form for product #{@product_id}", edit_category_product_path(@category_id, @product_id) %>
+    <%= link_to "Go to edit form for product #{@dimension.product_id}", edit_product_path(@dimension.product_id) %>
     <% @dimension.product.dimensions.each do |dimension| %>
-      <%= dimension.id != @dimension.id ? (link_to "Go to edit form for dimension #{dimension.id} of product #{@product_id}", edit_category_product_dimension_path(@category_id, @product_id, dimension)) : nil %>
+      <%= dimension.id != @dimension.id ? (link_to "Go to edit form for dimension #{dimension.id} of product #{dimension.product_id}", edit_dimension_path(dimension)) : nil %>
     <% end %>
-    <%= link_to "Go to edit form for price modifier of dimension #{@dimension.id} of product #{@dimension.product.id}", edit_category_product_dimension_price_modifier_path(@category_id, @product_id, @dimension, @dimension.price_modifier) %>
+    <%= link_to "Go to edit form for price modifier of dimension #{@dimension.id} of product #{@dimension.product_id}", edit_price_modifier_path(@dimension.price_modifier) %>
   </div>
 </div>

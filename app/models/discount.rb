@@ -1,3 +1,4 @@
+# Currently unused
 class Discount < ApplicationRecord
   belongs_to :user
   belongs_to :order, optional: true

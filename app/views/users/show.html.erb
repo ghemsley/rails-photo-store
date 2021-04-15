@@ -1,9 +1,32 @@
+<%= javascript_pack_tag 'productCard' %>
+<%= stylesheet_pack_tag 'productCard' %>
 <div class='pure-u-1 center'>
-  <div class='column'>
-      <h1><%= @user&.email %></h1>
-      <p class='lowercase'><%= @user&.uuid %><p>
-      <% if signed_in? || admin_signed_in? %>
-        <%= link_to 'Edit my account', edit_user_path(@user), class: 'pure-button' %>
-      <% end %>
+  <div class='fit-content background-white padding-1 center center-children margin-vertical-1 margin-bottom-2 shadow corner-rounded white-space-nowrap'>
+    <h1 class='margin-0 horizontal-padding-1'><%= @user&.email %></h1>
+    <p>ID: <%= @user&.uuid %><p>
+    <% if signed_in? || admin_signed_in? %>
+      <%= link_to 'Edit my account', edit_user_path(@user), class: 'pure-button margin-0' %>
+    <% end %>
   </div>
+  <% if @products %>
+    <div class='fit-content background-white padding-1 center center-children margin-vertical-1 shadow corner-rounded white-space-nowrap'>
+      <h1 class='margin-0 horizontal-padding-1 uppercase'>Recent orders</h1>
+      <% if @products&.empty? %>
+        <p class='margin-0 horizontal-padding-1 subheading'>You have no recent orders</p>
+      <% else %>
+        <p class='margin-0 horizontal-padding-1 subheading'>Sorted by most recently purchased</p>
+      <% end %>
+    </div>
+    <div class='display-flex margin-vertical-1 center'>
+      <% @products.each do |product| %>
+        <div class='margin-vertical-1'>
+          <%= render partial: 'products/product_card', locals: {model: product, full_size: false, show_description: false, lightbox: false,
+          class_name: 'corner-rounded padding-1 margin-1 background-white'} %>
+          <% if admin_signed_in? %>
+            <%= link_to 'Edit', edit_product_path(product), class: 'pure-button center margin-vertical-1' %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 </div>
