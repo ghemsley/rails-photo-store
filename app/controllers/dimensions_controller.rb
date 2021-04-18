@@ -14,6 +14,10 @@ class DimensionsController < ApplicationController
       flash[:notice] = "Created dimension #{dimension.id}"
       redirect_to product_path(dimension.product_id)
     else
+      @admin = get_admin_if_signed_in
+      @dimension = dimension
+      @category_id = params[:category_id]
+      @product_id = params[:product_id]
       render :new
     end
   end
@@ -29,6 +33,8 @@ class DimensionsController < ApplicationController
       flash[:notice] = "Updated dimension #{dimension.id}"
       redirect_to product_path(dimension.product_id)
     else 
+      @admin = get_admin_if_signed_in
+      @dimension = dimension
       render :edit
     end
   end
