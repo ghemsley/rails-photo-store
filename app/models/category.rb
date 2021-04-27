@@ -4,7 +4,7 @@ class Category < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 1, maximum: 255, too_short: 'Please enter a name',
                                                                                     too_long: '%{count} characters is the maximum allowed' }
-  validates :description, presence: true, length: { minimum: 1, maximum: 1024, too_short: 'Please enter a name',
+  validates :description, presence: true, length: { minimum: 1, maximum: 1024, too_short: 'Please enter a description',
                                                                                too_long: '%{count} characters is the maximum allowed' }
 
   def slider_props_json

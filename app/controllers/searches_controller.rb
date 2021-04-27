@@ -3,9 +3,9 @@ class SearchesController < ApplicationController
     @admin = get_admin_if_signed_in
     @query = params[:query]
     @products = if params[:filters].present?
-                  Product.includes(dimensions: :price_modifier).filter_metadata(@query, params[:filters])
+                  Product.includes(dimensions: :price_modifier).filter_metadata(@query, params[:filters]).distinct
                 else
-                  Product.includes(dimensions: :price_modifier).metadata_contains(@query)
+                  Product.includes(dimensions: :price_modifier).metadata_contains(@query).distinct
                 end
   end
 
